@@ -1,16 +1,16 @@
 # Feature Backlog (Epic)
 
 > **Scope:** {{PROJECT_SCOPE_ONE_LINER}}
-> **References:** [Architecture](./architecture.md) · [PRD](./prd.md) · [Agents](../agents.md)
+> **References:** [Architecture](./architecture.md) · [PRD](./prd.md) · [Agents](../AGENTS.md)
 > **Tracking:** Progress tracked in `progress.md` at repo root.
 >
 > **How to use this document:**
 > - PMs and tech leads write stories here during planning.
 > - Developers and LLM agents read stories for **intent and acceptance criteria**.
 > - Once a story is implemented, this document becomes **historical**. The code, `api.yaml`, and `schema.sql` are the truth — not this file.
-> - If implementation differs from what's written here, log a deviation in `progress.md` (see `agents.md` §14). Do NOT update this file to match the code.
+> - If implementation differs from what's written here, log a deviation in `progress.md` (see `AGENTS.md`, Progress Discipline). Do NOT update this file to match the code.
 >
-> **Conventions, testing expectations, and Definition of Done** are defined in `agents.md` (§9, §10). They are not repeated here to avoid drift.
+> **Conventions and validation expectations** are defined in `AGENTS.md`. They are not repeated here to avoid drift.
 
 ---
 
@@ -295,4 +295,4 @@ Errors:
 
 ## Handoff notes
 
-Before starting any slice, read `agents.md` in full. It contains all conventions, the Definition of Done, testing expectations, and the truth hierarchy. Do not rely on this epic for current implementation details — it is historical once stories are built.
+Before starting any slice, read `AGENTS.md` in full. It contains guardrails, validation strategy, and the truth hierarchy. Do not rely on this epic for current implementation details — it is historical once stories are built.

@@ -20,7 +20,7 @@ This skill is additive to `$web-feature`:
 
 - React + Vite in `web/`
 - Tailwind v4 + shadcn/ui primitives
-- Scaffold baseline theme: `modern-minimal` tokens in `web/src/index.css`
+- Default scaffold baseline theme: `modern-minimal` tokens in `web/src/index.css` (adjust per feature if needed)
 - Zustand for local UI state
 - TanStack Query for server state
 - Generated API types only from `web/src/lib/api/schema.d.ts`

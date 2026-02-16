@@ -1,6 +1,6 @@
 # Coding Conventions (Reference)
 
-> **Purpose:** Detailed patterns and code examples for this stack. Referenced by `agents.md` §7 — read this file when starting a new module or when unsure about a pattern. Not loaded into agent context by default.
+> **Purpose:** Detailed patterns and code examples for this stack. Referenced by `AGENTS.md` — read this file when starting a new module or when unsure about a pattern. Not loaded into agent context by default.
 
 ---
 
@@ -239,7 +239,7 @@ Reviewers check every PR against:
 - [ ] Does this break an existing user journey?
 - [ ] Are access control / authorization boundaries preserved?
 - [ ] Are list endpoints paginated and filtered?
-- [ ] Are the right tests added per `agents.md` §10?
+- [ ] Are the right tests added per `AGENTS.md` validation strategy?
 - [ ] Is `api.yaml` updated for new/changed endpoints?
 - [ ] Are generated files regenerated and committed (not hand-edited)?
 - [ ] Do error responses follow response shape conventions?

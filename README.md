@@ -36,9 +36,10 @@ Use the project skill and run the script:
 5. Backend defaults include chi + CORS, pgx, Redis, validator, JWT, and testify.
 
 ### Phase 5: `AGENTS.md` + `progress.md` — Build features
-`AGENTS.md` is the always-loaded rules file (~280 lines). Decision rules, guardrails, protocols.
+`AGENTS.md` is the always-loaded rules file (lean guardrails + risk-based execution).
 `progress.md` is the living project state. Read first, update after.
 `docs/conventions.md` has detailed code patterns and examples — read when starting a new module.
+Use `./scripts/context-brief.sh` to front-load current project context quickly.
 
 ## Project Skills
 

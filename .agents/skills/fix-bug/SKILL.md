@@ -15,10 +15,12 @@ Apply focused fixes with regression protection.
 ## Procedure
 
 1. Reproduce the issue from error report, test output, or repro steps.
-2. Add a failing test first (handler/service/frontend as appropriate).
+2. Add a failing test first when practical (handler/service/frontend as appropriate).
 3. Implement minimal fix (no bundled refactors).
 4. If fix touches contract or schema, follow `$api-contract` / `$db-migration` workflows.
-5. Run targeted tests, then `make test`, `make lint`, `make validate`.
+5. Run targeted tests first, then checks by risk:
+   - normal code fix: `make lint && make test`
+   - contract/schema/generated impact: add `make validate`
 6. Update `progress.md` with root cause and fix summary.
 
 ## Rules
