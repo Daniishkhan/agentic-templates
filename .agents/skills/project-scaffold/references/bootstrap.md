@@ -18,13 +18,27 @@ The script handles everything: prerequisite checks, directory structure, config 
 Frontend defaults installed by the script:
 - Tailwind CSS v4 via Vite plugin (`@tailwindcss/vite`)
 - shadcn/ui CLI (`shadcn@latest`) with starter components
+- Default shadcn theme baseline via tweakcn: `modern-minimal`
 - TanStack Query + React Router + Zustand
 - React Hook Form + Zod + resolver bridge
 - Vitest + Testing Library + Playwright
 
-Note: the script attempts non-interactive `shadcn` initialization and component add. If the CLI flags differ on your installed version, rerun manually:
-- `cd web && pnpm dlx shadcn@latest init`
-- `cd web && pnpm dlx shadcn@latest add button card input form sonner`
+Note: the script attempts non-interactive `shadcn` initialization, starter component add, and default theme install. It also writes a fallback `web/components.json` automatically if `shadcn init` does not complete.
+
+Manual rerun commands (optional):
+- `cd web && pnpm dlx shadcn@latest init --yes --base-color zinc`
+- `cd web && pnpm dlx shadcn@latest add button card input form sonner --yes`
+- `cd web && pnpm dlx shadcn@latest add https://tweakcn.com/r/themes/modern-minimal.json --yes`
+
+If the remote theme install fails, the bootstrap script writes the same `modern-minimal` token set directly to `web/src/index.css` as a fallback.
+
+Local infrastructure ports used by scaffold (to avoid common host collisions):
+- Postgres: `localhost:55432`
+- Redis: `localhost:56379`
+- MinIO API: `localhost:59000`
+- MinIO Console: `localhost:59001`
+
+Compose isolation: `make dev-infra` uses a compose project name derived from the repo folder, so multiple scaffolded projects can run concurrently without container/volume name collisions.
 
 Backend defaults installed by the script:
 - chi router + CORS middleware
@@ -86,6 +100,7 @@ make dev                # Start API + frontend + worker
 │
 ├── pkg/httputil/response.go       # JSON/Error/Paged response helpers
 ├── pkg/errors/codes.go            # Registered error code constants
+├── internal/system/queries.sql    # Placeholder sqlc query (keeps generate green)
 ├── internal/store/                # sqlc output directory (empty pre-migration)
 │
 ├── migrations/000001_initial.*    # Placeholder migration (you fill in)

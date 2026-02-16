@@ -1,54 +1,47 @@
 ---
 name: web-feature
 description: >
-  Build a frontend feature in web/src/features/. Use when asked to create
-  a page, form, list view, detail view, or any frontend UI work.
+  Build frontend features in web/src/features using generated API types.
+  Use when creating pages, lists, details, forms, hooks, and client state
+  with React, TanStack Query, shadcn/ui, and Zustand.
 metadata:
-  short-description: Build typed frontend features in React
+  short-description: Build typed React UI features fast
 ---
 
-# Frontend Feature
+# Web Feature
 
-> Full code patterns with examples: `docs/conventions.md` (TypeScript section).
+Ship UI features with typed contracts and reliable states.
+For high-end visual exploration or redesign quality, pair this with `$frontend-design`.
 
-## Feature layout
+## Core stack
 
-```
-web/src/features/<module>/
-├── <Module>Page.tsx        # Route-level page
-├── <Module>List.tsx        # List/table with pagination
-├── <Module>Detail.tsx      # Single resource view
-├── <Module>Form.tsx        # Create/edit form (React Hook Form + Zod)
-├── use<Module>.ts          # TanStack Query hooks (all data fetching)
-└── components/             # Feature-specific sub-components (optional)
-```
-
-Not every feature needs every file. Simple features: `Page.tsx` + `use<Module>.ts`.
+- Generated API types from `web/src/lib/api/schema.d.ts`
+- TanStack Query for server state
+- Zustand for local UI state
+- shadcn/ui components + Tailwind
+- React Hook Form + Zod for forms
 
 ## Procedure
 
-1. Verify types exist in `web/src/lib/api/schema.d.ts`. If not → update `api.yaml` first → `make generate-types`.
-
-2. Write data hooks in `use<Module>.ts`:
-   - `useQuery` for reads, `useMutation` for writes
-   - Structured query keys: `['resources', { page, status }]`
-   - Invalidate queries on mutation success
-
-3. Build page components using generated types + shadcn/ui from `ui/`.
-
-4. Handle **all three states** in every data-fetching view:
-   - **Loading** — skeleton or spinner
-   - **Error** — message + retry button
-   - **Empty** — message + CTA
-
-5. Forms: React Hook Form + Zod schema validation.
-
-6. Pagination on every list view.
+1. Confirm endpoint types exist in generated schema (`make generate-types` if needed).
+2. Create feature folder under `web/src/features/<module>/`.
+3. Implement `use<Module>.ts` hooks first:
+   - `useQuery` for reads
+   - `useMutation` for writes
+   - clear query keys + invalidation
+4. Build components with explicit states:
+   - loading
+   - empty
+   - error
+   - success
+5. Add forms with RHF + Zod.
+6. Use shadcn/ui primitives; compose, do not fork internals.
+7. Add/adjust tests for non-trivial components.
+8. Run `cd web && pnpm typecheck && pnpm test && pnpm lint`.
 
 ## Rules
 
-- **NEVER** hand-write API types. Import from `schema.d.ts`.
-- **ALL** data fetching through TanStack Query hooks. No raw `fetch`.
-- **ALL** views handle loading, error, and empty states.
-- No `any` types. TypeScript strict mode is on.
-- shadcn/ui for primitives — extend via composition, never modify internals.
+- Never hand-write API request/response types.
+- Avoid `any`; keep strict TypeScript.
+- Keep data fetching in hooks, not directly in page components.
+- Keep list views paginated and filterable.

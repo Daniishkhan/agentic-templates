@@ -1,4 +1,0 @@
-interface:
-  display_name: "Project Code Reviewer"
-  short_description: "Find regressions and contract drift"
-  default_prompt: "Use $project-code-reviewer to review these changes for bugs, security risks, API/schema drift, and missing tests."

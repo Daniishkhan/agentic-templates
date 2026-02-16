@@ -1,0 +1,4 @@
+interface:
+  display_name: "DB Migration"
+  short_description: "Create safe schema migrations"
+  default_prompt: "Use $db-migration to add this schema change with safe migration steps and regenerated artifacts."

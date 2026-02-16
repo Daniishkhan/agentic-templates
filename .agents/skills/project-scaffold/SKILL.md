@@ -12,7 +12,7 @@ metadata:
 # Project Scaffolding
 
 Use this skill to bootstrap a new repository from this template.
-The scaffold includes modern frontend defaults (Tailwind v4, shadcn/ui, Zustand, forms/validation, testing) and practical backend defaults (chi + CORS, pgx, Redis, validator, JWT).
+The scaffold includes modern frontend defaults (Tailwind v4, shadcn/ui, modern-minimal theme baseline, Zustand, forms/validation, testing) and practical backend defaults (chi + CORS, pgx, Redis, validator, JWT).
 
 ## Canonical source
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "New Feature E2E"
-  short_description: "Implement full-stack features end-to-end"
-  default_prompt: "Use $new-feature to implement this feature end-to-end across API, backend, frontend, tests, and validation."

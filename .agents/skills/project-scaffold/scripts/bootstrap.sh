@@ -33,6 +33,10 @@ fi
 
 PROJECT="$1"
 ORG="$2"
+PG_PORT=55432
+REDIS_PORT=56379
+MINIO_PORT=59000
+MINIO_CONSOLE_PORT=59001
 
 if [[ -d "$PROJECT" ]]; then
   echo "Error: directory '$PROJECT' already exists."
@@ -44,6 +48,173 @@ info()  { echo -e "${GREEN}[✓]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[!]${NC} $1"; }
 fail()  { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 step()  { echo -e "\n${CYAN}=== $1 ===${NC}"; }
+
+write_modern_minimal_theme_css() {
+  cat > web/src/index.css << 'EOF'
+@import "tailwindcss";
+
+:root {
+  --background: oklch(1.0000 0 0);
+  --foreground: oklch(0.3211 0 0);
+  --card: oklch(1.0000 0 0);
+  --card-foreground: oklch(0.3211 0 0);
+  --popover: oklch(1.0000 0 0);
+  --popover-foreground: oklch(0.3211 0 0);
+  --primary: oklch(0.6231 0.1880 259.8145);
+  --primary-foreground: oklch(1.0000 0 0);
+  --secondary: oklch(0.9670 0.0029 264.5419);
+  --secondary-foreground: oklch(0.4461 0.0263 256.8018);
+  --muted: oklch(0.9846 0.0017 247.8389);
+  --muted-foreground: oklch(0.5510 0.0234 264.3637);
+  --accent: oklch(0.9514 0.0250 236.8242);
+  --accent-foreground: oklch(0.3791 0.1378 265.5222);
+  --destructive: oklch(0.6368 0.2078 25.3313);
+  --destructive-foreground: oklch(1.0000 0 0);
+  --border: oklch(0.9276 0.0058 264.5313);
+  --input: oklch(0.9276 0.0058 264.5313);
+  --ring: oklch(0.6231 0.1880 259.8145);
+  --chart-1: oklch(0.6231 0.1880 259.8145);
+  --chart-2: oklch(0.5461 0.2152 262.8809);
+  --chart-3: oklch(0.4882 0.2172 264.3763);
+  --chart-4: oklch(0.4244 0.1809 265.6377);
+  --chart-5: oklch(0.3791 0.1378 265.5222);
+  --sidebar: oklch(0.9846 0.0017 247.8389);
+  --sidebar-foreground: oklch(0.3211 0 0);
+  --sidebar-primary: oklch(0.6231 0.1880 259.8145);
+  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-accent: oklch(0.9514 0.0250 236.8242);
+  --sidebar-accent-foreground: oklch(0.3791 0.1378 265.5222);
+  --sidebar-border: oklch(0.9276 0.0058 264.5313);
+  --sidebar-ring: oklch(0.6231 0.1880 259.8145);
+  --font-sans: Inter, sans-serif;
+  --font-serif: Source Serif 4, serif;
+  --font-mono: JetBrains Mono, monospace;
+  --radius: 0.375rem;
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: oklch(0 0 0);
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: oklch(0.2046 0 0);
+  --foreground: oklch(0.9219 0 0);
+  --card: oklch(0.2686 0 0);
+  --card-foreground: oklch(0.9219 0 0);
+  --popover: oklch(0.2686 0 0);
+  --popover-foreground: oklch(0.9219 0 0);
+  --primary: oklch(0.6231 0.1880 259.8145);
+  --primary-foreground: oklch(1.0000 0 0);
+  --secondary: oklch(0.2686 0 0);
+  --secondary-foreground: oklch(0.9219 0 0);
+  --muted: oklch(0.2393 0 0);
+  --muted-foreground: oklch(0.7155 0 0);
+  --accent: oklch(0.3791 0.1378 265.5222);
+  --accent-foreground: oklch(0.8823 0.0571 254.1284);
+  --destructive: oklch(0.6368 0.2078 25.3313);
+  --destructive-foreground: oklch(1.0000 0 0);
+  --border: oklch(0.3715 0 0);
+  --input: oklch(0.3715 0 0);
+  --ring: oklch(0.6231 0.1880 259.8145);
+  --chart-1: oklch(0.7137 0.1434 254.6240);
+  --chart-2: oklch(0.6231 0.1880 259.8145);
+  --chart-3: oklch(0.5461 0.2152 262.8809);
+  --chart-4: oklch(0.4882 0.2172 264.3763);
+  --chart-5: oklch(0.4244 0.1809 265.6377);
+  --sidebar: oklch(0.2046 0 0);
+  --sidebar-foreground: oklch(0.9219 0 0);
+  --sidebar-primary: oklch(0.6231 0.1880 259.8145);
+  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-accent: oklch(0.3791 0.1378 265.5222);
+  --sidebar-accent-foreground: oklch(0.8823 0.0571 254.1284);
+  --sidebar-border: oklch(0.3715 0 0);
+  --sidebar-ring: oklch(0.6231 0.1880 259.8145);
+  --font-sans: Inter, sans-serif;
+  --font-serif: Source Serif 4, serif;
+  --font-mono: JetBrains Mono, monospace;
+  --radius: 0.375rem;
+  --shadow-x: 0;
+  --shadow-y: 1px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: oklch(0 0 0);
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+}
+EOF
+}
 
 # ---------------------------------------------------------------------------
 # Prereq check + install via Homebrew
@@ -136,10 +307,10 @@ step "Writing config files"
 # --- .env.example ---
 cat > .env.example << EOF
 # — Database —
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${PROJECT}?sslmode=disable
+DATABASE_URL=postgresql://postgres:postgres@localhost:${PG_PORT}/${PROJECT}?sslmode=disable
 
 # — Redis —
-REDIS_URL=redis://localhost:6379
+REDIS_URL=redis://localhost:${REDIS_PORT}
 
 # — Auth —
 JWT_SECRET=local-dev-secret-change-in-prod
@@ -147,7 +318,7 @@ JWT_ACCESS_TTL=15m
 JWT_REFRESH_TTL=7d
 
 # — Object Storage —
-S3_ENDPOINT=http://localhost:9000
+S3_ENDPOINT=http://localhost:${MINIO_PORT}
 S3_BUCKET=${PROJECT}-media
 S3_ACCESS_KEY=minioadmin
 S3_SECRET_KEY=minioadmin
@@ -332,18 +503,20 @@ EOF
 # NOTE: Makefile requires real tabs. Using printf to be explicit.
 cat > Makefile << 'MAKEFILE_EOF'
 .PHONY: help dev dev-infra dev-api dev-web migrate migrate-new migrate-down seed schema-dump generate generate-sqlc generate-types lint test test-integration test-e2e validate build
+COMPOSE_PROJECT_NAME ?= $(notdir $(CURDIR))
+DOCKER_COMPOSE = docker compose -p $(COMPOSE_PROJECT_NAME) -f infra/docker-compose.yml
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 dev-infra: ## Start local infrastructure (Postgres, Redis, MinIO)
-	docker compose -f infra/docker-compose.yml up -d
+	$(DOCKER_COMPOSE) up -d
 	@echo "Waiting for Postgres..."
-	@until docker compose -f infra/docker-compose.yml exec -T postgres pg_isready -U postgres > /dev/null 2>&1; do sleep 1; done
+	@until $(DOCKER_COMPOSE) exec -T postgres pg_isready -U postgres > /dev/null 2>&1; do sleep 1; done
 	@echo "Infrastructure ready."
 
 dev-infra-down: ## Stop local infrastructure
-	docker compose -f infra/docker-compose.yml down
+	$(DOCKER_COMPOSE) down
 
 dev: dev-infra ## Run full stack (API + web + worker)
 	@make -j3 dev-api dev-web dev-worker
@@ -370,7 +543,7 @@ seed: ## Seed database with test data
 	go run ./cmd/seed/main.go
 
 schema-dump: ## Dump current schema to schema.sql
-	pg_dump --schema-only --no-owner --no-privileges "$${DATABASE_URL}" > schema.sql
+	pg_dump --schema-only --no-owner --no-privileges "$${DATABASE_URL}" | sed '/^\\restrict /d; /^\\unrestrict /d' > schema.sql
 
 generate: generate-sqlc schema-dump generate-types ## Run ALL code generation
 
@@ -421,7 +594,7 @@ services:
   postgres:
     image: postgres:17-alpine
     ports:
-      - "5432:5432"
+      - "${PG_PORT}:5432"
     environment:
       POSTGRES_DB: ${PROJECT}
       POSTGRES_USER: postgres
@@ -437,7 +610,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -447,8 +620,8 @@ services:
   minio:
     image: minio/minio
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -521,7 +694,9 @@ func main() {
 
 	r.Get("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(\`{"status":"ok"}\`))
+		if _, err := w.Write([]byte(\`{"status":"ok"}\`)); err != nil {
+			slog.Error("failed to write health response", "err", err)
+		}
 	})
 
 	srv := &http.Server{
@@ -547,7 +722,9 @@ func main() {
 	slog.Info("Shutting down server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	srv.Shutdown(ctx)
+	if err := srv.Shutdown(ctx); err != nil {
+		slog.Error("shutdown error", "err", err)
+	}
 }
 EOF
 
@@ -631,16 +808,22 @@ type ErrorResponse struct {
 	Error ErrorBody `json:"error"`
 }
 
+func writeJSON(w http.ResponseWriter, payload interface{}) {
+	if err := json.NewEncoder(w).Encode(payload); err != nil {
+		http.Error(w, `{"error":{"code":"INTERNAL_ERROR","message":"Failed to encode response"}}`, http.StatusInternalServerError)
+	}
+}
+
 func JSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(DataResponse{Data: data})
+	writeJSON(w, DataResponse{Data: data})
 }
 
 func PagedJSON(w http.ResponseWriter, data interface{}, page, pageSize, total int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(PagedResponse{
+	writeJSON(w, PagedResponse{
 		Data: data,
 		Meta: PageMeta{Page: page, PageSize: pageSize, Total: total},
 	})
@@ -649,7 +832,7 @@ func PagedJSON(w http.ResponseWriter, data interface{}, page, pageSize, total in
 func Error(w http.ResponseWriter, status int, code, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(ErrorResponse{
+	writeJSON(w, ErrorResponse{
 		Error: ErrorBody{Code: code, Message: message},
 	})
 }
@@ -657,7 +840,7 @@ func Error(w http.ResponseWriter, status int, code, message string) {
 func ValidationError(w http.ResponseWriter, details interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnprocessableEntity)
-	json.NewEncoder(w).Encode(ErrorResponse{
+	writeJSON(w, ErrorResponse{
 		Error: ErrorBody{
 			Code:    "VALIDATION_ERROR",
 			Message: "Request validation failed",
@@ -681,6 +864,16 @@ const (
 	CodeTokenExpired    = "TOKEN_EXPIRED"
 	CodeRateLimited     = "RATE_LIMITED"
 )
+EOF
+
+# --- internal/system/queries.sql ---
+mkdir -p internal/system
+cat > internal/system/queries.sql << 'EOF'
+-- Placeholder query so sqlc generation succeeds on a fresh scaffold.
+-- Replace with module-specific queries as features are implemented.
+
+-- name: Ping :one
+SELECT 1;
 EOF
 
 info "Go source files written"
@@ -739,6 +932,13 @@ EOF
 # --- web/tsconfig.json ---
 cat > web/tsconfig.json << 'EOF'
 {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@ui/*": ["../ui/src/*"]
+    }
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
@@ -882,7 +1082,14 @@ export default [
     rules: {
       ...tsPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      'no-undef': 'off',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    },
+  },
+  {
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
 ];
@@ -922,7 +1129,7 @@ export default function App() {
       <div className="w-full max-w-xl rounded-xl border bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-bold text-slate-900">${PROJECT}</h1>
         <p className="mt-2 text-slate-600">
-          Scaffolded with React, TanStack Query, Zustand, Tailwind v4, and shadcn/ui setup.
+          Scaffolded with React, TanStack Query, Zustand, Tailwind v4, shadcn/ui, and the modern-minimal theme baseline.
         </p>
         <button
           type="button"
@@ -940,6 +1147,16 @@ EOF
 # --- web/src/index.css ---
 cat > web/src/index.css << 'EOF'
 @import "tailwindcss";
+EOF
+
+# --- web/src/lib/utils.ts ---
+cat > web/src/lib/utils.ts << 'EOF'
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 EOF
 
 # --- web/src/lib/store/app-store.ts ---
@@ -1169,7 +1386,7 @@ pnpm --dir web add clsx tailwind-merge class-variance-authority lucide-react
 pnpm --dir web add -D typescript vite @vitejs/plugin-react @tailwindcss/vite tailwindcss
 pnpm --dir web add -D @types/react @types/react-dom @types/node
 pnpm --dir web add -D openapi-typescript
-pnpm --dir web add -D eslint @eslint/js globals
+pnpm --dir web add -D eslint@^9 @eslint/js@^9 globals
 pnpm --dir web add -D @typescript-eslint/parser @typescript-eslint/eslint-plugin
 pnpm --dir web add -D eslint-plugin-react-hooks eslint-plugin-react-refresh
 pnpm --dir web add -D vitest @vitest/coverage-v8 jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event
@@ -1182,14 +1399,51 @@ pnpm install
 if (cd web && pnpm dlx shadcn@latest init --yes --base-color zinc); then
   info "shadcn/ui initialized"
 else
-  warn "shadcn init did not complete automatically. Run 'cd web && pnpm dlx shadcn@latest init' manually."
+  warn "shadcn init did not complete automatically; generating fallback components config."
+fi
+
+# Ensure components config exists so add/theme commands never prompt for first-run setup.
+if [[ ! -f web/components.json ]]; then
+  warn "web/components.json missing after init; writing fallback config."
+  cat > web/components.json << 'EOF'
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/index.css",
+    "baseColor": "zinc",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "iconLibrary": "lucide"
+}
+EOF
 fi
 
 # Add common starter components if CLI supports non-interactive add.
 if (cd web && pnpm dlx shadcn@latest add button card input form sonner --yes); then
   info "shadcn/ui starter components added"
 else
-  warn "shadcn add components did not run automatically. Run 'cd web && pnpm dlx shadcn@latest add button card input form sonner' manually."
+  warn "shadcn add components did not run automatically."
+fi
+
+# Apply default theme from tweakcn (modern-minimal) for consistent baseline.
+if (cd web && pnpm dlx shadcn@latest add https://tweakcn.com/r/themes/modern-minimal.json --yes); then
+  info "shadcn/ui modern-minimal theme applied"
+else
+  warn "Theme install via shadcn CLI failed — writing modern-minimal theme tokens directly to web/src/index.css"
+  write_modern_minimal_theme_css
+  info "modern-minimal theme tokens applied to web/src/index.css"
 fi
 
 info "Frontend packages initialized"

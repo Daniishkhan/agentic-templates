@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design"
+  short_description: "Polish UI with clear visual direction"
+  default_prompt: "Use $frontend-design to elevate this UI with an intentional visual system, strong hierarchy, and production-ready implementation."

@@ -32,7 +32,7 @@ Use the project skill and run the script:
 1. Invoke `$project-scaffold`.
 2. Run `./.agents/skills/project-scaffold/scripts/bootstrap.sh <project_name> <github_org>`.
 3. Validate using `.agents/skills/project-scaffold/references/bootstrap.md`.
-4. Frontend defaults include Tailwind v4, shadcn/ui, Zustand, React Hook Form + Zod, and test tooling.
+4. Frontend defaults include Tailwind v4, shadcn/ui with the modern-minimal theme baseline, Zustand, React Hook Form + Zod, and test tooling.
 5. Backend defaults include chi + CORS, pgx, Redis, validator, JWT, and testify.
 
 ### Phase 5: `AGENTS.md` + `progress.md` — Build features

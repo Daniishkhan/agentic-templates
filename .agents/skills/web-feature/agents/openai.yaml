@@ -1,4 +1,4 @@
 interface:
-  display_name: "Web Feature Builder"
-  short_description: "Build typed frontend features in React"
-  default_prompt: "Use $web-feature to build this frontend feature with generated API types, query hooks, and complete UI states."
+  display_name: "Web Feature"
+  short_description: "Build typed React features quickly"
+  default_prompt: "Use $web-feature to build this UI feature with generated types, query hooks, forms, and robust states."

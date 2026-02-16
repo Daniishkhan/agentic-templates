@@ -1,0 +1,4 @@
+interface:
+  display_name: "API Contract"
+  short_description: "Design OpenAPI contracts and sync types"
+  default_prompt: "Use $api-contract to update this API contract in api.yaml and regenerate frontend types safely."

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Go Module Builder"
-  short_description: "Create or update backend Go modules"
-  default_prompt: "Use $go-module to add or modify this internal Go module with handler, service, queries, and tests."
+  display_name: "Go API Module"
+  short_description: "Build handler/service/query layers"
+  default_prompt: "Use $go-module to implement this backend module with handler, service, sqlc queries, and tests."
