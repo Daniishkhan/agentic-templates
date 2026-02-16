@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Scaffold"
+  short_description: "Bootstrap a new repo from this template"
+  default_prompt: "Use $project-scaffold to initialize a new project from this template and verify the local setup workflow."

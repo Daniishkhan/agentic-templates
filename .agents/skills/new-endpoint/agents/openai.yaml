@@ -1,0 +1,4 @@
+interface:
+  display_name: "New API Endpoint"
+  short_description: "Add spec-first API endpoints safely"
+  default_prompt: "Use $new-endpoint to define this API contract first, implement the endpoint, and cover handler error cases."

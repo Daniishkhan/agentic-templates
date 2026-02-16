@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix Bug"
+  short_description: "Reproduce and fix regressions safely"
+  default_prompt: "Use $fix-bug to reproduce this issue with a failing test, apply a minimal fix, and verify regression coverage."

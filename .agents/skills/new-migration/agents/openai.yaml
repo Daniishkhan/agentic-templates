@@ -1,0 +1,4 @@
+interface:
+  display_name: "DB Migration"
+  short_description: "Create safe append-only schema migrations"
+  default_prompt: "Use $new-migration to create this migration with safe up/down steps and regenerate schema artifacts."
