@@ -1085,41 +1085,20 @@ step "Writing documentation stubs"
 cat > progress.md << EOF
 # Progress
 
-## Current state
-- **Current slice:** Slice 0 — Foundation
-- **Last updated:** ${DATE}
+> Keep this short. Pull story IDs and scope from docs/epic.md.
+> Last updated: ${DATE}
 
-## Active stories
+## Done
+- (none yet)
 
-| Story | Owner | Status | Notes |
-|-------|-------|--------|-------|
-| US-000 Repo scaffolding | — | In progress | |
+## Inactive / Blocked
+- (none)
 
-## Completed stories
+## Needs Rework
+- (none)
 
-| Story | Completed | Deviations |
-|-------|-----------|------------|
-| (none yet) | | |
-
-## Deviations from epic
-
-(none yet)
-
-## Blocked items
-
-(none)
-
-## Decisions
-
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| ${DATE} | Go + TS monorepo | Type-safe codegen, LLM-optimized |
-| ${DATE} | sqlc over ORM | SQL is the documentation, LLMs write SQL well |
-| ${DATE} | Spec-first (api.yaml) | Eliminates contract drift |
-
-## Known debt
-
-(none yet)
+## Next Up
+- (none)
 EOF
 
 # --- empty doc stubs (content comes from PM / tech lead) ---

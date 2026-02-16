@@ -77,7 +77,7 @@ make dev                # Start API + frontend + worker
 ├── go.mod / go.sum                # Go module + deps
 ├── package.json                   # Root pnpm workspace
 ├── pnpm-workspace.yaml / lock     # Workspace config
-├── progress.md                    # Initialized for Slice 0
+├── progress.md                    # Minimal placeholder (agent-maintained)
 ├── sqlc.yaml                      # SQL codegen config
 │
 ├── cmd/api/main.go                # API entrypoint (serves /health)
