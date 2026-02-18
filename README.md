@@ -24,6 +24,46 @@ Contract:   OpenAPI 3.1 (api.yaml) -> generated TypeScript types
 `docs/epic.md` is the big bucket. Fill all epics/stories/tasks there.
 Use the Story Index block in `docs/epic.md` for machine-readable state.
 
+## Create a New Project From Templates
+
+From this `templates` repo, scaffold a fresh project repo with one command:
+
+```bash
+make new PROJECT=my-new-product ORG=mygithuborg
+```
+
+Shortcut alias:
+
+```bash
+make bio PROJECT=my-new-product ORG=mygithuborg
+```
+
+Defaults:
+- If `ORG` is omitted, `scripts/new-project.sh` uses `GITHUB_ORG` or prompts.
+- New repo destination defaults to the parent directory of `templates`.
+
+Scaffold directly in the current directory (directory must be empty):
+
+```bash
+./scripts/new-project.sh --project my-new-product --org mygithuborg --here
+```
+
+### Global Command (Run From Any Folder)
+
+Install global command `bio`:
+
+```bash
+make install-global
+```
+
+Then from any empty folder:
+
+```bash
+bio --project my-new-product --org mygithuborg
+```
+
+`bio` defaults to `--here` mode, so it scaffolds into your current directory.
+
 ## Execution Loop
 
 1. Run `./scripts/workflow.sh context brief`.
