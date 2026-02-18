@@ -59,11 +59,11 @@ START
 
 ### Story execution workflow
 
-1. Choose next `ready` story from `docs/epic.md` Story Index.
-2. Set story to `in-progress` in Story Index and matching story section.
+1. Choose next ready story with `./scripts/story-op.sh ready`.
+2. Start it with `./scripts/story-op.sh start --story US-XXX [--owner <name>]`.
 3. Implement smallest correct code change.
 4. Run validation based on risk (Section 5).
-5. Set story to `done` in `docs/epic.md` and summarize in `progress.md`.
+5. Complete it with `./scripts/story-op.sh done --story US-XXX --summary "..."`.
 
 ### API Change
 
@@ -147,6 +147,7 @@ Affected files:
 - Use optional skills when needed:
   - `$fix-bug`
   - `$error-learning`
+  - `$task-ops`
   - `$frontend-design`
   - `$project-scaffold` (template/bootstrap use)
 

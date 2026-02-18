@@ -68,6 +68,12 @@ if [[ -f docs/epic.md ]]; then
   print_between_markers "^<!-- STORY_INDEX_START -->$" "^<!-- STORY_INDEX_END -->$" "docs/epic.md" || true
   echo
 
+  if [[ -x scripts/story-op.sh ]]; then
+    echo "-- Ready Queue (story-op) --"
+    ./scripts/story-op.sh ready || echo "(story-op ready check unavailable)"
+    echo
+  fi
+
   echo "-- Epic Stories (docs/epic.md) --"
   if command -v rg >/dev/null 2>&1; then
     rg -n "^## US-" docs/epic.md || echo "(no US-* sections found)"

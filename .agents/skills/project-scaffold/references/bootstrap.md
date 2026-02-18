@@ -17,6 +17,7 @@ It also includes a minimal AI feedback loop:
 - SQLite directive store at `logs/learning.db`
 - `memory.md` for durable lessons
 - `scripts/incident-learn.sh` for atomic capture + lesson update
+- `scripts/story-op.sh` for closed-vocabulary story state transitions
 
 ## Frontend defaults
 
@@ -59,6 +60,14 @@ make generate
 make dev
 ```
 
+For story execution state:
+
+```bash
+make story-ready
+make story-start STORY=US-000 OWNER=ali
+make story-done STORY=US-000 SUMMARY="Scaffold complete"
+```
+
 When debugging major issues, prefer:
 
 ```bash
@@ -85,6 +94,7 @@ make learn-rules
 ├── sqlc.yaml
 ├── scripts/context-brief.sh
 ├── scripts/incident-learn.sh
+├── scripts/story-op.sh
 ├── logs/{runtime,snapshots}/
 ├── logs/learning.db            # created on first incident directive
 ├── cmd/{api,worker,seed}/

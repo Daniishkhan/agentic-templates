@@ -27,11 +27,17 @@ Use the Story Index block in `docs/epic.md` for machine-readable state.
 ## Execution Loop
 
 1. Run `./scripts/context-brief.sh`.
-2. Pick the next `ready` story from `docs/epic.md` Story Index.
-3. Move it to `in-progress` in `docs/epic.md`.
+2. Pick the next unblocked story with `./scripts/story-op.sh ready`.
+3. Start it with `./scripts/story-op.sh start --story US-XXX [--owner <name>]`.
 4. Implement code changes.
 5. Run checks (`make lint`, `make test`, plus `make validate` when needed).
-6. Mark story `done` in `docs/epic.md` and log key notes in `progress.md`.
+6. Complete it with `./scripts/story-op.sh done --story US-XXX --summary "..."`.
+
+`story-op.sh` is the closed-vocabulary state writer for stories:
+- `ready` computes dependency-aware ready queue from `docs/epic.md`.
+- `start` updates Story Index + Story Meta status to `in-progress`.
+- `done` updates status to `done` and appends concise completion notes to `progress.md`.
+- `block` updates status to `blocked` and appends reason to `progress.md`.
 
 ## Failure Learning Loop (major incidents only)
 
@@ -72,6 +78,7 @@ Each skill should include:
 | `docs/epic.md` | PM + tech lead | Backlog and execution state |
 | `logs/learning.db` | AI runtime | Incident directive ledger (queryable) |
 | `memory.md` | AI + tech lead | Durable lessons from major incidents |
+| `scripts/story-op.sh` | AI runtime + developers | Closed-vocabulary story state operations |
 | `progress.md` | Implementer/agent | Ongoing implementation log |
 | `docs/conventions.md` | Tech lead | Code patterns and references |
 | `api.yaml` | Developers + agents | API contract source of truth |

@@ -13,6 +13,12 @@
   - SQLite directive store: `logs/learning.db`
   - durable lessons store: `memory.md`
   - scaffold defaults now include runtime logs + directive commands (`learn-error`, `learn-list`, `learn-rules`).
+- Added closed-vocabulary story operations:
+  - new command layer: `scripts/story-op.sh` (`ready|start|done|block`)
+  - automatic status sync between Story Index and Story Meta
+  - automatic `progress.md` updates on `done` and `block`
+  - regression harness: `scripts/test-story-op.sh`
+  - scaffold Make targets: `story-ready`, `story-start`, `story-done`, `story-block`
 
 ## Inactive / Blocked
 - (none)

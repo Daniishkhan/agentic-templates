@@ -515,7 +515,7 @@ EOF
 # --- Makefile ---
 # NOTE: Makefile requires real tabs. Using printf to be explicit.
 cat > Makefile << 'MAKEFILE_EOF'
-.PHONY: help dev dev-log dev-infra dev-api dev-api-log dev-web dev-web-log dev-worker dev-worker-log logs-infra logs-runtime learn-error learn-list learn-rules migrate migrate-new migrate-down seed schema-dump generate generate-sqlc generate-types lint test test-integration test-e2e validate build
+.PHONY: help dev dev-log dev-infra dev-api dev-api-log dev-web dev-web-log dev-worker dev-worker-log logs-infra logs-runtime story-ready story-start story-done story-block learn-error learn-list learn-rules migrate migrate-new migrate-down seed schema-dump generate generate-sqlc generate-types lint test test-integration test-e2e validate build
 COMPOSE_PROJECT_NAME ?= $(notdir $(CURDIR))
 DOCKER_COMPOSE = docker compose -p $(COMPOSE_PROJECT_NAME) -f infra/docker-compose.yml
 
@@ -563,6 +563,29 @@ logs-infra: ## Show recent Docker infra logs (tail 200)
 
 logs-runtime: ## Show recent runtime logs captured under logs/runtime/
 	@if ls logs/runtime/*.log >/dev/null 2>&1; then tail -n 200 logs/runtime/*.log; else echo "No logs/runtime/*.log found"; fi
+
+story-ready: ## Show dependency-aware ready stories from docs/epic.md
+	./scripts/story-op.sh ready
+
+story-start: ## Start a story (usage: make story-start STORY=US-XXX [OWNER=name] [NOTE=\"...\"])
+	@if [ -z "$(STORY)" ]; then echo "Usage: make story-start STORY=US-XXX [OWNER=name] [NOTE=\"...\"]"; exit 1; fi
+	@if [ -n "$(OWNER)" ] && [ -n "$(NOTE)" ]; then \
+		./scripts/story-op.sh start --story "$(STORY)" --owner "$(OWNER)" --note "$(NOTE)"; \
+	elif [ -n "$(OWNER)" ]; then \
+		./scripts/story-op.sh start --story "$(STORY)" --owner "$(OWNER)"; \
+	elif [ -n "$(NOTE)" ]; then \
+		./scripts/story-op.sh start --story "$(STORY)" --note "$(NOTE)"; \
+	else \
+		./scripts/story-op.sh start --story "$(STORY)"; \
+	fi
+
+story-done: ## Complete a story (usage: make story-done STORY=US-XXX SUMMARY=\"...\")
+	@if [ -z "$(STORY)" ] || [ -z "$(SUMMARY)" ]; then echo "Usage: make story-done STORY=US-XXX SUMMARY=\"...\""; exit 1; fi
+	./scripts/story-op.sh done --story "$(STORY)" --summary "$(SUMMARY)"
+
+story-block: ## Block a story (usage: make story-block STORY=US-XXX REASON=\"...\")
+	@if [ -z "$(STORY)" ] || [ -z "$(REASON)" ]; then echo "Usage: make story-block STORY=US-XXX REASON=\"...\""; exit 1; fi
+	./scripts/story-op.sh block --story "$(STORY)" --reason "$(REASON)"
 
 learn-error: ## Record major incident directive and lesson (add --with-snapshot only when needed)
 	./scripts/incident-learn.sh $(ARGS)
@@ -1385,7 +1408,8 @@ step "Writing planning helper scripts"
 
 cp "$TEMPLATE_ROOT/scripts/context-brief.sh" scripts/context-brief.sh
 cp "$TEMPLATE_ROOT/scripts/incident-learn.sh" scripts/incident-learn.sh
-chmod +x scripts/context-brief.sh scripts/incident-learn.sh
+cp "$TEMPLATE_ROOT/scripts/story-op.sh" scripts/story-op.sh
+chmod +x scripts/context-brief.sh scripts/incident-learn.sh scripts/story-op.sh
 
 info "Planning helper scripts written"
 
@@ -1547,6 +1571,7 @@ echo "  7. For log-backed debugging, use: make dev-log and make logs-infra"
 echo "  8. For major incidents, use: make learn-error ARGS='--story US-XXX --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"'"
 echo "     (add --with-snapshot only when raw evidence is needed)"
 echo "  9. Inspect incident directives: make learn-list"
-echo " 10. Optional (for E2E): cd web && pnpm exec playwright install"
-echo " 11. Verify: curl http://localhost:3000/api/health"
+echo " 10. Execute stories with: make story-ready / make story-start STORY=US-XXX / make story-done STORY=US-XXX SUMMARY='...'"
+echo " 11. Optional (for E2E): cd web && pnpm exec playwright install"
+echo " 12. Verify: curl http://localhost:3000/api/health"
 echo ""
