@@ -1,0 +1,4 @@
+interface:
+  display_name: "Error Learning"
+  short_description: "Capture incident directives and persist anti-regression lessons"
+  default_prompt: "Use $error-learning to log a major incident directive to logs/learning.db, optionally attach a snapshot, and persist a prevention rule to memory.md."

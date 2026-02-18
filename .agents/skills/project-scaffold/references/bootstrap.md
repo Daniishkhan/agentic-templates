@@ -12,6 +12,12 @@ chmod +x .agents/skills/project-scaffold/scripts/bootstrap.sh
 
 The script handles prerequisites, repo structure, config files, backend/frontend initialization, starter code, CI, and initial commit.
 
+It also includes a minimal AI feedback loop:
+- centralized runtime log paths under `logs/`
+- SQLite directive store at `logs/learning.db`
+- `memory.md` for durable lessons
+- `scripts/incident-learn.sh` for atomic capture + lesson update
+
 ## Frontend defaults
 
 - Tailwind CSS v4 via Vite plugin (`@tailwindcss/vite`)
@@ -53,6 +59,16 @@ make generate
 make dev
 ```
 
+When debugging major issues, prefer:
+
+```bash
+make dev-log
+make logs-infra
+make learn-list
+make learn-rules
+./scripts/incident-learn.sh --help
+```
+
 ## What the script creates
 
 ```text
@@ -65,8 +81,12 @@ make dev
 ├── go.mod / go.sum
 ├── package.json / pnpm-workspace.yaml / lockfile
 ├── progress.md
+├── memory.md
 ├── sqlc.yaml
 ├── scripts/context-brief.sh
+├── scripts/incident-learn.sh
+├── logs/{runtime,snapshots}/
+├── logs/learning.db            # created on first incident directive
 ├── cmd/{api,worker,seed}/
 ├── internal/
 ├── pkg/
@@ -92,6 +112,7 @@ make dev
 | 8 | `make lint` | Lint passes |
 | 9 | `make validate` | Generated artifacts in sync |
 | 10 | `make build` | API/worker binaries + web build |
+| 11 | `make learn-error ARGS='--story US-000 --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"'` | Incident directive recorded in `logs/learning.db` |
 
 ## One-shot smoke test
 

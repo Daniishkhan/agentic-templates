@@ -17,9 +17,11 @@ Use this when starting a task or resuming after context switching.
 ## Low-context read sequence
 
 1. `progress.md`
-2. `docs/epic.md` Story Index
-3. target story section in `docs/epic.md`
-4. `api.yaml` / module files only as needed for implementation
+2. `memory.md` latest lessons
+3. `./scripts/incident-learn.sh --list --limit 5` (if `logs/learning.db` exists)
+4. `docs/epic.md` Story Index
+5. target story section in `docs/epic.md`
+6. `api.yaml` / module files only as needed for implementation
 
 ## Diagram choice
 

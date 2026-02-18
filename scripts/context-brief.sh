@@ -45,6 +45,24 @@ else
   echo
 fi
 
+if [[ -f memory.md ]]; then
+  echo "-- memory.md (latest lessons) --"
+  if command -v rg >/dev/null 2>&1; then
+    rg '^## LESSON-[0-9]{8}-[0-9]{6}' memory.md | tail -n 5 || echo "(no lessons yet)"
+  else
+    grep -E '^## LESSON-[0-9]{8}-[0-9]{6}' memory.md | tail -n 5 || echo "(no lessons yet)"
+  fi
+  echo
+fi
+
+if [[ -f logs/learning.db ]] && command -v sqlite3 >/dev/null 2>&1; then
+  if sqlite3 logs/learning.db "SELECT 1 FROM sqlite_master WHERE type='table' AND name='incidents';" | grep -q 1; then
+    echo "-- incident directives (latest) --"
+    sqlite3 -header -column logs/learning.db "SELECT incident_id, story_id, severity, ts_utc, title FROM incidents ORDER BY ts_utc DESC LIMIT 5;" || true
+    echo
+  fi
+fi
+
 if [[ -f docs/epic.md ]]; then
   echo "-- Story Index (docs/epic.md) --"
   print_between_markers "^<!-- STORY_INDEX_START -->$" "^<!-- STORY_INDEX_END -->$" "docs/epic.md" || true

@@ -262,6 +262,7 @@ install_if_missing sqlc           sqlc
 install_if_missing migrate        golang-migrate
 install_if_missing air            air
 install_if_missing golangci-lint  golangci-lint
+install_if_missing sqlite3        sqlite
 
 # oapi-codegen (no brew formula — go install)
 if command -v oapi-codegen &>/dev/null; then
@@ -293,6 +294,7 @@ mkdir -p ui/src/{components,lib}
 mkdir -p mobile
 mkdir -p docs
 mkdir -p scripts
+mkdir -p logs/{runtime,snapshots}
 mkdir -p infra
 mkdir -p .github/workflows
 
@@ -366,6 +368,13 @@ Thumbs.db
 # Infrastructure volumes
 pgdata/
 miniodata/
+
+# Runtime and incident artifacts (keep directives, skip raw volume)
+logs/runtime/*.log
+logs/snapshots/*.log
+logs/learning.db
+logs/learning.db-shm
+logs/learning.db-wal
 
 # LLM agent / personal tooling artifacts
 .agents/
@@ -506,7 +515,7 @@ EOF
 # --- Makefile ---
 # NOTE: Makefile requires real tabs. Using printf to be explicit.
 cat > Makefile << 'MAKEFILE_EOF'
-.PHONY: help dev dev-infra dev-api dev-web migrate migrate-new migrate-down seed schema-dump generate generate-sqlc generate-types lint test test-integration test-e2e validate build
+.PHONY: help dev dev-log dev-infra dev-api dev-api-log dev-web dev-web-log dev-worker dev-worker-log logs-infra logs-runtime learn-error learn-list learn-rules migrate migrate-new migrate-down seed schema-dump generate generate-sqlc generate-types lint test test-integration test-e2e validate build
 COMPOSE_PROJECT_NAME ?= $(notdir $(CURDIR))
 DOCKER_COMPOSE = docker compose -p $(COMPOSE_PROJECT_NAME) -f infra/docker-compose.yml
 
@@ -525,14 +534,44 @@ dev-infra-down: ## Stop local infrastructure
 dev: dev-infra ## Run full stack (API + web + worker)
 	@make -j3 dev-api dev-web dev-worker
 
+dev-log: dev-infra ## Run full stack with runtime logs persisted to logs/runtime/
+	@make -j3 dev-api-log dev-web-log dev-worker-log
+
 dev-api: ## Run Go API with hot reload
 	air -c .air.toml
+
+dev-api-log: ## Run Go API with hot reload and append logs/runtime/api.log
+	@mkdir -p logs/runtime
+	air -c .air.toml 2>&1 | tee -a logs/runtime/api.log
 
 dev-web: ## Run frontend dev server
 	cd web && pnpm dev
 
+dev-web-log: ## Run frontend dev server and append logs/runtime/web.log
+	@mkdir -p logs/runtime
+	cd web && pnpm dev 2>&1 | tee -a ../logs/runtime/web.log
+
 dev-worker: ## Run background worker
 	go run ./cmd/worker/main.go
+
+dev-worker-log: ## Run background worker and append logs/runtime/worker.log
+	@mkdir -p logs/runtime
+	go run ./cmd/worker/main.go 2>&1 | tee -a logs/runtime/worker.log
+
+logs-infra: ## Show recent Docker infra logs (tail 200)
+	$(DOCKER_COMPOSE) logs --no-color --tail 200
+
+logs-runtime: ## Show recent runtime logs captured under logs/runtime/
+	@if ls logs/runtime/*.log >/dev/null 2>&1; then tail -n 200 logs/runtime/*.log; else echo "No logs/runtime/*.log found"; fi
+
+learn-error: ## Record major incident directive and lesson (add --with-snapshot only when needed)
+	./scripts/incident-learn.sh $(ARGS)
+
+learn-list: ## Show latest incident directives from SQLite
+	./scripts/incident-learn.sh --list
+
+learn-rules: ## Show latest prevention rules
+	./scripts/incident-learn.sh --list-rules
 
 migrate: ## Apply pending migrations
 	migrate -path migrations -database "$${DATABASE_URL}" up
@@ -1322,6 +1361,8 @@ cat > progress.md << EOF
 - (none)
 EOF
 
+cp "$TEMPLATE_ROOT/memory.md" memory.md
+
 # --- copy template docs for low-context planning workflow ---
 cp "$TEMPLATE_ROOT/docs/epic.md" docs/epic.md
 cp "$TEMPLATE_ROOT/docs/prd.md" docs/prd.md
@@ -1343,7 +1384,8 @@ info "Documentation stubs written"
 step "Writing planning helper scripts"
 
 cp "$TEMPLATE_ROOT/scripts/context-brief.sh" scripts/context-brief.sh
-chmod +x scripts/context-brief.sh
+cp "$TEMPLATE_ROOT/scripts/incident-learn.sh" scripts/incident-learn.sh
+chmod +x scripts/context-brief.sh scripts/incident-learn.sh
 
 info "Planning helper scripts written"
 
@@ -1501,6 +1543,10 @@ echo "       make migrate"
 echo "       make schema-dump"
 echo "       make generate"
 echo "       make dev"
-echo "  7. Optional (for E2E): cd web && pnpm exec playwright install"
-echo "  8. Verify: curl http://localhost:3000/api/health"
+echo "  7. For log-backed debugging, use: make dev-log and make logs-infra"
+echo "  8. For major incidents, use: make learn-error ARGS='--story US-XXX --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"'"
+echo "     (add --with-snapshot only when raw evidence is needed)"
+echo "  9. Inspect incident directives: make learn-list"
+echo " 10. Optional (for E2E): cd web && pnpm exec playwright install"
+echo " 11. Verify: curl http://localhost:3000/api/health"
 echo ""

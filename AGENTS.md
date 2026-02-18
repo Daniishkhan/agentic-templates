@@ -9,6 +9,7 @@
 - Optimize for delivery velocity with safety.
 - Prefer the smallest correct change over broad refactors.
 - Keep planning simple: use `docs/epic.md` as the single backlog source.
+- Keep learning durable: store major incident lessons in `memory.md`.
 
 ## 2) Hard Constraints (MUST)
 
@@ -21,7 +22,8 @@
 4. Never commit secrets (`.env` stays local, keep `.env.example` current).
 5. All list endpoints are bounded and paginated.
 6. Planning state belongs in `docs/epic.md` (Story Index + story sections).
-7. If implementation intentionally deviates from plan, log it in `progress.md`.
+7. Major/critical incident learnings must be captured as directives in `logs/learning.db` via `./scripts/incident-learn.sh`; durable rules live in `memory.md`.
+8. If implementation intentionally deviates from plan, log it in `progress.md`.
 
 ## 3) Context Bootstrap (SHOULD First)
 
@@ -34,6 +36,7 @@ Recommended first command:
 Then read based on task type:
 
 - Always: `progress.md`
+- Always: `memory.md` (latest lessons)
 - Planning intent/state: `docs/epic.md`
 - API change: `api.yaml`
 - DB/schema change: `migrations/` + `schema.sql`
@@ -85,6 +88,16 @@ START
 3. Implement minimal fix.
 4. Re-run checks based on risk (Section 5).
 
+### Error Learning (major incidents only)
+
+1. Record directive:
+   - `./scripts/incident-learn.sh --story US-XXX --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"`
+2. Add `--with-snapshot` only when raw evidence is necessary.
+3. Inspect directives/rules:
+   - `./scripts/incident-learn.sh --list`
+   - `./scripts/incident-learn.sh --list-rules`
+4. Apply prevention rule to active story and continue execution.
+
 ## 5) Validation Strategy (Risk-Based)
 
 - Low risk (`docs/`, comments, copy): run only relevant checks.
@@ -99,8 +112,10 @@ Use `make test-integration` when DB-dependent behavior changes.
 ```text
 1) Code + generated artifacts (current truth)
 2) docs/epic.md (planned backlog + story state)
-3) progress.md (what changed and why)
-4) docs/prd.md + docs/onepager.md (business context)
+3) logs/learning.db (incident directives + queryable history)
+4) memory.md (high-signal prevention rules)
+5) progress.md (what changed and why)
+6) docs/prd.md + docs/onepager.md (business context)
 ```
 
 ## 7) Progress Discipline
@@ -131,6 +146,7 @@ Affected files:
   - `$web-feature`
 - Use optional skills when needed:
   - `$fix-bug`
+  - `$error-learning`
   - `$frontend-design`
   - `$project-scaffold` (template/bootstrap use)
 
@@ -140,6 +156,7 @@ Pause feature work and fix immediately if any of these occur:
 
 - generated artifacts are out of sync
 - migration failure or data integrity risk
+- repeated unknown major error pattern (run `$error-learning` before continuing)
 - critical auth/security bug
 - critical user journey broken on `main`
 

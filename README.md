@@ -33,6 +33,21 @@ Use the Story Index block in `docs/epic.md` for machine-readable state.
 5. Run checks (`make lint`, `make test`, plus `make validate` when needed).
 6. Mark story `done` in `docs/epic.md` and log key notes in `progress.md`.
 
+## Failure Learning Loop (major incidents only)
+
+When a story is blocked by a major/critical error or repeated failure pattern:
+
+1. Write an incident directive:
+   - `./scripts/incident-learn.sh --story US-XXX --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"`
+2. Optional evidence when needed:
+   - add `--with-snapshot` (writes `logs/snapshots/INC-*.log`)
+3. Inspect and reuse learnings:
+   - `./scripts/incident-learn.sh --list`
+   - `./scripts/incident-learn.sh --list-rules`
+4. The script updates:
+   - `logs/learning.db` (canonical directive store)
+   - `memory.md` (durable anti-regression rules, deduped by prevention rule)
+
 ## Why this is the middle ground
 
 - Not over-engineered: one backlog file (`docs/epic.md`) instead of many planning artifacts.
@@ -55,6 +70,8 @@ Each skill should include:
 | `docs/onepager.md` | PM/founder | Problem framing |
 | `docs/prd.md` | PM/founder | Product requirements |
 | `docs/epic.md` | PM + tech lead | Backlog and execution state |
+| `logs/learning.db` | AI runtime | Incident directive ledger (queryable) |
+| `memory.md` | AI + tech lead | Durable lessons from major incidents |
 | `progress.md` | Implementer/agent | Ongoing implementation log |
 | `docs/conventions.md` | Tech lead | Code patterns and references |
 | `api.yaml` | Developers + agents | API contract source of truth |
@@ -64,6 +81,8 @@ Each skill should include:
 
 ```text
 1) Code + generated artifacts
-2) docs/epic.md + progress.md
-3) docs/prd.md + docs/onepager.md
+2) docs/epic.md
+3) logs/learning.db + memory.md
+4) progress.md
+5) docs/prd.md + docs/onepager.md
 ```
