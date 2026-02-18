@@ -10,7 +10,8 @@ metadata:
 
 # Task Ops
 
-Use this skill for all story state mutations. Avoid manual status edits in
+Use this skill for all story state mutations. Prefer `./scripts/workflow.sh story ...`
+for day-to-day execution. Avoid manual status edits in
 `docs/epic.md` unless repairing malformed files.
 
 ## Canonical source
@@ -22,14 +23,14 @@ Use this skill for all story state mutations. Avoid manual status edits in
 ## Commands
 
 - List ready stories:
-  - `./scripts/story-op.sh ready`
-  - `./scripts/story-op.sh ready --json`
+  - `./scripts/workflow.sh story ready`
+  - `./scripts/workflow.sh story ready --json`
 - Start work:
-  - `./scripts/story-op.sh start --story US-XXX [--owner <name>] [--note "..."]`
+  - `./scripts/workflow.sh story start --story US-XXX [--owner <name>] [--note "..."]`
 - Complete work:
-  - `./scripts/story-op.sh done --story US-XXX --summary "..."`
+  - `./scripts/workflow.sh story done --story US-XXX --summary "..."`
 - Mark blocked:
-  - `./scripts/story-op.sh block --story US-XXX --reason "..."`
+  - `./scripts/workflow.sh story block --story US-XXX --reason "..."`
 
 ## Rules
 

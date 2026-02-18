@@ -68,7 +68,11 @@ if [[ -f docs/epic.md ]]; then
   print_between_markers "^<!-- STORY_INDEX_START -->$" "^<!-- STORY_INDEX_END -->$" "docs/epic.md" || true
   echo
 
-  if [[ -x scripts/story-op.sh ]]; then
+  if [[ -x scripts/workflow.sh ]]; then
+    echo "-- Ready Queue (workflow story) --"
+    ./scripts/workflow.sh story ready || echo "(workflow ready check unavailable)"
+    echo
+  elif [[ -x scripts/story-op.sh ]]; then
     echo "-- Ready Queue (story-op) --"
     ./scripts/story-op.sh ready || echo "(story-op ready check unavailable)"
     echo

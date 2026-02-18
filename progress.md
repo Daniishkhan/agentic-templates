@@ -19,6 +19,11 @@
   - automatic `progress.md` updates on `done` and `block`
   - regression harness: `scripts/test-story-op.sh`
   - scaffold Make targets: `story-ready`, `story-start`, `story-done`, `story-block`
+- Added unified workflow CLI:
+  - new entrypoint: `scripts/workflow.sh` (`context|story|incident|doctor|llm`)
+  - story and incident operations can now be run from one command surface
+  - scaffold Make targets now route through workflow for agent consistency
+  - regression harness: `scripts/test-workflow.sh`
 
 ## Inactive / Blocked
 - (none)

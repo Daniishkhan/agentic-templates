@@ -22,7 +22,7 @@
 4. Never commit secrets (`.env` stays local, keep `.env.example` current).
 5. All list endpoints are bounded and paginated.
 6. Planning state belongs in `docs/epic.md` (Story Index + story sections).
-7. Major/critical incident learnings must be captured as directives in `logs/learning.db` via `./scripts/incident-learn.sh`; durable rules live in `memory.md`.
+7. Major/critical incident learnings must be captured as directives in `logs/learning.db` via `./scripts/workflow.sh incident learn` (delegates to `incident-learn.sh`); durable rules live in `memory.md`.
 8. If implementation intentionally deviates from plan, log it in `progress.md`.
 
 ## 3) Context Bootstrap (SHOULD First)
@@ -30,7 +30,7 @@
 Recommended first command:
 
 ```bash
-./scripts/context-brief.sh
+./scripts/workflow.sh context brief
 ```
 
 Then read based on task type:
@@ -59,11 +59,11 @@ START
 
 ### Story execution workflow
 
-1. Choose next ready story with `./scripts/story-op.sh ready`.
-2. Start it with `./scripts/story-op.sh start --story US-XXX [--owner <name>]`.
+1. Choose next ready story with `./scripts/workflow.sh story ready`.
+2. Start it with `./scripts/workflow.sh story start --story US-XXX [--owner <name>]`.
 3. Implement smallest correct code change.
 4. Run validation based on risk (Section 5).
-5. Complete it with `./scripts/story-op.sh done --story US-XXX --summary "..."`.
+5. Complete it with `./scripts/workflow.sh story done --story US-XXX --summary "..."`.
 
 ### API Change
 
@@ -91,11 +91,11 @@ START
 ### Error Learning (major incidents only)
 
 1. Record directive:
-   - `./scripts/incident-learn.sh --story US-XXX --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"`
+   - `./scripts/workflow.sh incident learn --story US-XXX --title \"...\" --signal \"...\" --root-cause \"...\" --correction \"...\" --prevention-rule \"...\" --checks \"...\"`
 2. Add `--with-snapshot` only when raw evidence is necessary.
 3. Inspect directives/rules:
-   - `./scripts/incident-learn.sh --list`
-   - `./scripts/incident-learn.sh --list-rules`
+   - `./scripts/workflow.sh incident list`
+   - `./scripts/workflow.sh incident rules`
 4. Apply prevention rule to active story and continue execution.
 
 ## 5) Validation Strategy (Risk-Based)

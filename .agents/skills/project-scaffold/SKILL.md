@@ -13,7 +13,7 @@ metadata:
 
 Use this skill to bootstrap a new repository from this template.
 The scaffold includes modern frontend defaults (Tailwind v4, shadcn/ui, modern-minimal theme baseline, Zustand, forms/validation, testing) and practical backend defaults (chi + CORS, pgx, Redis, validator, JWT).
-It also seeds a minimal failure-learning loop (`logs/learning.db` + `memory.md` + `scripts/incident-learn.sh`) and closed-vocabulary story operations (`scripts/story-op.sh`).
+It also seeds a unified workflow CLI (`scripts/workflow.sh`) that wraps failure-learning (`incident-learn.sh`) and closed-vocabulary story operations (`story-op.sh`).
 
 ## Canonical source
 

@@ -18,6 +18,7 @@ It also includes a minimal AI feedback loop:
 - `memory.md` for durable lessons
 - `scripts/incident-learn.sh` for atomic capture + lesson update
 - `scripts/story-op.sh` for closed-vocabulary story state transitions
+- `scripts/workflow.sh` as the unified CLI for context, story, incident, and doctor commands
 
 ## Frontend defaults
 
@@ -66,6 +67,7 @@ For story execution state:
 make story-ready
 make story-start STORY=US-000 OWNER=ali
 make story-done STORY=US-000 SUMMARY="Scaffold complete"
+make workflow ARGS="context brief"
 ```
 
 When debugging major issues, prefer:
@@ -73,6 +75,7 @@ When debugging major issues, prefer:
 ```bash
 make dev-log
 make logs-infra
+make workflow ARGS="incident list"
 make learn-list
 make learn-rules
 ./scripts/incident-learn.sh --help
@@ -95,6 +98,7 @@ make learn-rules
 ├── scripts/context-brief.sh
 ├── scripts/incident-learn.sh
 ├── scripts/story-op.sh
+├── scripts/workflow.sh
 ├── logs/{runtime,snapshots}/
 ├── logs/learning.db            # created on first incident directive
 ├── cmd/{api,worker,seed}/
