@@ -59,10 +59,11 @@ make install-global
 Then from any empty folder:
 
 ```bash
-bio --project my-new-product --org mygithuborg
+bio --template web --project my-new-product --org mygithuborg
 ```
 
 `bio` defaults to `--here` mode, so it scaffolds into your current directory.
+Use `--template mobile` to scaffold from the sibling mobile templates repo.
 
 ## Execution Loop
 

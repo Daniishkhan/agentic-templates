@@ -515,6 +515,11 @@ EOF
 # --- Makefile ---
 # NOTE: Makefile requires real tabs. Using printf to be explicit.
 cat > Makefile << 'MAKEFILE_EOF'
+ifneq (,$(wildcard .env))
+include .env
+export
+endif
+
 .PHONY: help dev dev-log dev-infra dev-api dev-api-log dev-web dev-web-log dev-worker dev-worker-log logs-infra logs-runtime workflow story-ready story-start story-done story-block learn-error learn-list learn-rules migrate migrate-new migrate-down seed schema-dump generate generate-sqlc generate-types lint test test-integration test-e2e validate build
 COMPOSE_PROJECT_NAME ?= $(notdir $(CURDIR))
 DOCKER_COMPOSE = docker compose -p $(COMPOSE_PROJECT_NAME) -f infra/docker-compose.yml
@@ -538,11 +543,21 @@ dev-log: dev-infra ## Run full stack with runtime logs persisted to logs/runtime
 	@make -j3 dev-api-log dev-web-log dev-worker-log
 
 dev-api: ## Run Go API with hot reload
-	air -c .air.toml
+	@if command -v air >/dev/null 2>&1 && air -c .air.toml -h >/dev/null 2>&1; then \
+		air -c .air.toml; \
+	else \
+		echo "Go Air with '-c' not found; falling back to go run."; \
+		go run ./cmd/api/main.go; \
+	fi
 
 dev-api-log: ## Run Go API with hot reload and append logs/runtime/api.log
 	@mkdir -p logs/runtime
-	air -c .air.toml 2>&1 | tee -a logs/runtime/api.log
+	@if command -v air >/dev/null 2>&1 && air -c .air.toml -h >/dev/null 2>&1; then \
+		air -c .air.toml 2>&1 | tee -a logs/runtime/api.log; \
+	else \
+		echo "Go Air with '-c' not found; falling back to go run." | tee -a logs/runtime/api.log; \
+		go run ./cmd/api/main.go 2>&1 | tee -a logs/runtime/api.log; \
+	fi
 
 dev-web: ## Run frontend dev server
 	cd web && pnpm dev

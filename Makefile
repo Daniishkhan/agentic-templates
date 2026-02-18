@@ -18,9 +18,12 @@ bootstrap: new ## Alias for new
 
 bio: new ## Short alias for new (requested shortcut)
 
-install-global: ## Install global scaffold command (usage: make install-global [CMD=bio] [MODE=here|new-dir] [BIN_DIR=~/.local/bin])
+install-global: ## Install global scaffold command (usage: make install-global [CMD=bio] [MODE=here|new-dir] [DEFAULT_TEMPLATE=web|mobile] [WEB_ROOT=/path/templates] [MOBILE_ROOT=/path/templates-mobile] [BIN_DIR=~/.local/bin])
 	@set --; \
 	if [ -n "$(CMD)" ]; then set -- "$$@" --name "$(CMD)"; fi; \
 	if [ -n "$(MODE)" ]; then set -- "$$@" --mode "$(MODE)"; fi; \
+	if [ -n "$(DEFAULT_TEMPLATE)" ]; then set -- "$$@" --default-template "$(DEFAULT_TEMPLATE)"; fi; \
+	if [ -n "$(WEB_ROOT)" ]; then set -- "$$@" --web-root "$(WEB_ROOT)"; fi; \
+	if [ -n "$(MOBILE_ROOT)" ]; then set -- "$$@" --mobile-root "$(MOBILE_ROOT)"; fi; \
 	if [ -n "$(BIN_DIR)" ]; then set -- "$$@" --bin-dir "$(BIN_DIR)"; fi; \
 	./scripts/install-global-command.sh "$$@"
