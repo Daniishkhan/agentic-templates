@@ -301,6 +301,26 @@ mkdir -p .github/workflows
 info "Directories created"
 
 # ---------------------------------------------------------------------------
+# Agent operating context
+# ---------------------------------------------------------------------------
+step "Copying agent operating context"
+
+if [[ -f "$TEMPLATE_ROOT/AGENTS.md" ]]; then
+  cp "$TEMPLATE_ROOT/AGENTS.md" AGENTS.md
+else
+  warn "AGENTS.md not found in template root; skipping"
+fi
+
+if [[ -d "$TEMPLATE_ROOT/.agents/skills" ]]; then
+  mkdir -p .agents
+  cp -R "$TEMPLATE_ROOT/.agents/skills" .agents/
+else
+  warn ".agents/skills not found in template root; skipping"
+fi
+
+info "Agent operating context copied"
+
+# ---------------------------------------------------------------------------
 # Helper: write file (cat with heredoc). Handles all file creation below.
 # ---------------------------------------------------------------------------
 DATE=$(date +%Y-%m-%d)
@@ -377,7 +397,9 @@ logs/learning.db-shm
 logs/learning.db-wal
 
 # LLM agent / personal tooling artifacts
-.agents/
+.agents/*
+!.agents/skills/
+!.agents/skills/**
 .claude/
 .cursor/
 .aider/
@@ -1578,7 +1600,7 @@ echo "Next steps:"
 echo "  1. cd ${PROJECT}"
 echo "  2. Edit migrations/000001_initial.up.sql with your data model"
 echo "  3. Edit migrations/000001_initial.down.sql with the reverse"
-echo "  4. Copy AGENTS.md into the repo root"
+echo "  4. Review AGENTS.md and .agents/skills for agent workflow defaults"
 echo "  5. Fill in docs/onepager.md, docs/prd.md, and docs/epic.md"
 echo "  6. Run:"
 echo "       make dev-infra"

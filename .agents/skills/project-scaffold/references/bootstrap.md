@@ -47,7 +47,7 @@ The script auto-installs tools via Homebrew. Only Homebrew must already exist:
 
 1. Edit `migrations/000001_initial.up.sql` with MVP tables.
 2. Edit `migrations/000001_initial.down.sql` for rollback.
-3. Copy `AGENTS.md` into the generated repo root.
+3. Review `AGENTS.md` and `.agents/skills/` in the generated repo.
 4. Fill `docs/onepager.md`, `docs/prd.md`, and `docs/epic.md`.
 
 Then run:
