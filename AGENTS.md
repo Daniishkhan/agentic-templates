@@ -1,6 +1,6 @@
 # AGENTS.md — LLM Operating Rules
 
-> Purpose: keep agents on a reliable path without over-constraining normal delivery.
+> Purpose: keep agents on a reliable path without over-constraining delivery.
 > Stack: Go + TypeScript (React/Vite) + PostgreSQL + Redis + Docker Compose.
 > Contract bridge: `api.yaml` -> generated TS types in `web/src/lib/api/schema.d.ts`.
 
@@ -8,7 +8,7 @@
 
 - Optimize for delivery velocity with safety.
 - Prefer the smallest correct change over broad refactors.
-- Treat this file as guardrails, not a script to follow blindly.
+- Keep planning simple: use `docs/epic.md` as the single backlog source.
 
 ## 2) Hard Constraints (MUST)
 
@@ -20,8 +20,8 @@
    - `api.yaml` is the backend/frontend contract bridge.
 4. Never commit secrets (`.env` stays local, keep `.env.example` current).
 5. All list endpoints are bounded and paginated.
-6. When plan docs conflict with code, code + generated artifacts win.
-7. If you intentionally deviate from planned behavior, log it in `progress.md`.
+6. Planning state belongs in `docs/epic.md` (Story Index + story sections).
+7. If implementation intentionally deviates from plan, log it in `progress.md`.
 
 ## 3) Context Bootstrap (SHOULD First)
 
@@ -31,22 +31,21 @@ Recommended first command:
 ./scripts/context-brief.sh
 ```
 
-Reference: `.agents/references/context-bootstrap.md`
-
 Then read based on task type:
 
 - Always: `progress.md`
+- Planning intent/state: `docs/epic.md`
 - API change: `api.yaml`
 - DB/schema change: `migrations/` + `schema.sql`
 - Backend module work: `internal/<module>/`
 - Frontend feature work: `web/src/features/<module>/`
-- Planning intent only: `docs/epic.md`
 - Pattern references when needed: `docs/conventions.md`
 
 Quick routing:
 
 ```text
 START
+|- Planning question?        -> docs/epic.md (Story Index -> target story)
 |- API surface changed?      -> api.yaml -> generate types -> implement
 |- DB shape changed?         -> new migration -> migrate/schema/sqlc
 |- Backend behavior changed? -> handler/service/queries + tests
@@ -54,6 +53,14 @@ START
 ```
 
 ## 4) Core Workflows
+
+### Story execution workflow
+
+1. Choose next `ready` story from `docs/epic.md` Story Index.
+2. Set story to `in-progress` in Story Index and matching story section.
+3. Implement smallest correct code change.
+4. Run validation based on risk (Section 5).
+5. Set story to `done` in `docs/epic.md` and summarize in `progress.md`.
 
 ### API Change
 
@@ -76,7 +83,7 @@ START
 1. Reproduce from report/log/test.
 2. Add a failing regression test when practical.
 3. Implement minimal fix.
-4. Re-run checks based on risk (see Section 5).
+4. Re-run checks based on risk (Section 5).
 
 ## 5) Validation Strategy (Risk-Based)
 
@@ -85,14 +92,14 @@ START
 - Contract/schema/shared-layer changes: run `make validate`, `make lint`, `make test`.
 - Before PR/merge: ensure `make validate`, `make lint`, `make test` are green.
 
-Use `make test-integration` when DB-dependent behavior is changed.
+Use `make test-integration` when DB-dependent behavior changes.
 
 ## 6) Source of Truth
 
 ```text
 1) Code + generated artifacts (current truth)
-2) progress.md (what changed and why)
-3) docs/epic.md (planning intent; historical after implementation)
+2) docs/epic.md (planned backlog + story state)
+3) progress.md (what changed and why)
 4) docs/prd.md + docs/onepager.md (business context)
 ```
 
@@ -139,7 +146,7 @@ Pause feature work and fix immediately if any of these occur:
 ## 10) Never Do
 
 - Edit generated files directly.
-- Implement an endpoint change without first updating `api.yaml`.
+- Implement endpoint changes without updating `api.yaml` first.
 - Edit old migrations in place (add new migrations instead).
 - Import backend code into `web/` or frontend concerns into `internal/`.
 - Commit secrets.

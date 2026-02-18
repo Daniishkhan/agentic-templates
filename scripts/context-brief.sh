@@ -14,6 +14,17 @@ print_section() {
   ' "$file"
 }
 
+print_between_markers() {
+  local start="$1"
+  local end="$2"
+  local file="$3"
+  awk -v s="$start" -v e="$end" '
+    $0 ~ s {in_block=1; next}
+    $0 ~ e {in_block=0; exit}
+    in_block {print}
+  ' "$file"
+}
+
 echo "== Context Brief =="
 echo "repo: $(basename "$ROOT_DIR")"
 echo "time: $(date '+%Y-%m-%d %H:%M:%S %Z')"
@@ -35,6 +46,10 @@ else
 fi
 
 if [[ -f docs/epic.md ]]; then
+  echo "-- Story Index (docs/epic.md) --"
+  print_between_markers "^<!-- STORY_INDEX_START -->$" "^<!-- STORY_INDEX_END -->$" "docs/epic.md" || true
+  echo
+
   echo "-- Epic Stories (docs/epic.md) --"
   if command -v rg >/dev/null 2>&1; then
     rg -n "^## US-" docs/epic.md || echo "(no US-* sections found)"

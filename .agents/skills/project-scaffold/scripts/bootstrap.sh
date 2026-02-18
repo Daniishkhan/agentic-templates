@@ -22,6 +22,9 @@ set -euo pipefail
 # After running: make dev-infra && make migrate && make dev
 # ============================================================================
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+
 # ---------------------------------------------------------------------------
 # Args + validation
 # ---------------------------------------------------------------------------
@@ -289,6 +292,7 @@ mkdir -p web/e2e
 mkdir -p ui/src/{components,lib}
 mkdir -p mobile
 mkdir -p docs
+mkdir -p scripts
 mkdir -p infra
 mkdir -p .github/workflows
 
@@ -1318,14 +1322,30 @@ cat > progress.md << EOF
 - (none)
 EOF
 
-# --- empty doc stubs (content comes from PM / tech lead) ---
-for doc in docs/epic.md docs/prd.md docs/onepager.md docs/architecture.md; do
-  if [[ ! -f "$doc" ]]; then
-    echo "# $(basename "$doc" .md) — TODO" > "$doc"
-  fi
-done
+# --- copy template docs for low-context planning workflow ---
+cp "$TEMPLATE_ROOT/docs/epic.md" docs/epic.md
+cp "$TEMPLATE_ROOT/docs/prd.md" docs/prd.md
+cp "$TEMPLATE_ROOT/docs/onepager.md" docs/onepager.md
+cp "$TEMPLATE_ROOT/docs/conventions.md" docs/conventions.md
+
+# --- architecture remains project-specific ---
+if [[ ! -f docs/architecture.md ]]; then
+  cat > docs/architecture.md << 'EOF'
+# Architecture — TODO
+EOF
+fi
 
 info "Documentation stubs written"
+
+# ---------------------------------------------------------------------------
+# Planning helper scripts
+# ---------------------------------------------------------------------------
+step "Writing planning helper scripts"
+
+cp "$TEMPLATE_ROOT/scripts/context-brief.sh" scripts/context-brief.sh
+chmod +x scripts/context-brief.sh
+
+info "Planning helper scripts written"
 
 # ---------------------------------------------------------------------------
 # Placeholder migration (empty — user fills in from epic data model)
@@ -1334,7 +1354,7 @@ step "Creating placeholder migration"
 
 cat > migrations/000001_initial.up.sql << 'EOF'
 -- Initial migration: create MVP tables here.
--- See docs/epic.md data model section for planning intent.
+-- See docs/epic.md story details and docs/prd.md for planning intent.
 -- After editing, run: make migrate && make schema-dump && make generate-sqlc
 EOF
 
@@ -1474,7 +1494,7 @@ echo "  1. cd ${PROJECT}"
 echo "  2. Edit migrations/000001_initial.up.sql with your data model"
 echo "  3. Edit migrations/000001_initial.down.sql with the reverse"
 echo "  4. Copy AGENTS.md into the repo root"
-echo "  5. Fill in docs/epic.md, docs/prd.md, docs/onepager.md"
+echo "  5. Fill in docs/onepager.md, docs/prd.md, and docs/epic.md"
 echo "  6. Run:"
 echo "       make dev-infra"
 echo "       make migrate"
