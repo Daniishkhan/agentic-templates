@@ -38,6 +38,7 @@ Then read based on task type:
 - Always: `progress.md`
 - Always: `memory.md` (latest lessons)
 - Planning intent/state: `docs/epic.md`
+- Domain model and bounded contexts: `docs/ddd.md`
 - API change: `api.yaml`
 - DB/schema change: `migrations/` + `schema.sql`
 - Backend module work: `internal/<module>/`
@@ -115,7 +116,7 @@ Use `make test-integration` when DB-dependent behavior changes.
 3) logs/learning.db (incident directives + queryable history)
 4) memory.md (high-signal prevention rules)
 5) progress.md (what changed and why)
-6) docs/prd.md + docs/onepager.md (business context)
+6) docs/prd.md + docs/onepager.md + docs/ddd.md (business and domain context)
 ```
 
 ## 7) Progress Discipline

@@ -3,29 +3,51 @@ id: EPIC-BACKLOG
 type: epic-backlog
 schema_version: 2
 status: active
-owner: "[Tech Lead Name]"
+owner: "[Tech Lead]"
 last_updated: "YYYY-MM-DD"
-source_prd: docs/prd.md
-source_onepager: docs/onepager.md
+sources:
+  onepager: docs/onepager.md
+  prd: docs/prd.md
+  ddd: docs/ddd.md
 ---
 
-# Feature Backlog (Epic)
+# Feature Backlog (Epic): [Project Name]
 
-> Scope: [PROJECT_SCOPE_ONE_LINER]
-> References: `docs/prd.md`, `docs/onepager.md`, `AGENTS.md`
+> Purpose: the single execution backlog source of truth.
+> This file is **what we build** (stories + acceptance criteria + contract intent), not deep implementation detail.
+>
+> References:
+> - Product intent: `docs/onepager.md`, `docs/prd.md`
+> - Domain language: `docs/ddd.md`
+> - Engineering patterns: `docs/conventions.md`
 > Execution log: `progress.md`
 
 ## How to use this file
 
-- This is the single backlog source of truth for planning.
-- Keep the **Story Index** current first (status, owner, dependencies).
-- Keep detailed story sections below for acceptance criteria and implementation tasks.
-- During implementation, AI executes from this file and writes run-state updates to `progress.md`.
+- Update the **Story Index** first for status/ownership/dependencies.
+- Each story section must be outcome-focused with testable acceptance criteria.
+- If you add engineering notes, keep them implementation-agnostic (no file-path micromanagement). Patterns live in `docs/conventions.md`.
 
 ## Status model
 
-- `backlog` -> `ready` -> `in-progress` -> `done`
-- `blocked` can be used from `ready` or `in-progress`
+- `backlog` → `ready` → `in-progress` → `done`
+- `blocked` may be used from `ready` or `in-progress`
+
+### Definition of Ready (story-level)
+
+A story can move to `ready` when:
+- Acceptance criteria are specific and testable
+- Dependencies are set
+- It references relevant PRD requirements (`FR-*` / `NFR-*`) and DDD concepts (module/aggregate)
+- API/UX intent is clear enough to implement without guessing
+
+### Definition of Done (story-level)
+
+A story is `done` when:
+- Acceptance criteria are met
+- Key errors/edge cases are handled
+- Changes are validated (lint/test/validate as appropriate)
+- `progress.md` is updated via workflow tooling
 
 ## Story Index (machine-readable, update first)
 
@@ -33,21 +55,21 @@ source_onepager: docs/onepager.md
 ```yaml
 stories:
   - id: US-000
-    title: Repository setup + local dev environment
+    title: Foundation — local dev environment works end-to-end
     epic: EPIC-00
     status: backlog
     owner: unassigned
     depends_on: []
 
   - id: US-001
-    title: Database schema + initial migration
+    title: Foundation — database workflow + schema baseline
     epic: EPIC-00
     status: backlog
     owner: unassigned
     depends_on: [US-000]
 
   - id: US-002
-    title: CI pipeline
+    title: Foundation — CI pipeline gates main
     epic: EPIC-00
     status: backlog
     owner: unassigned
@@ -59,28 +81,33 @@ stories:
 
 | Type | Format | Example |
 |---|---|---|
-| Epic | `EPIC-XX Module Name` | `EPIC-01 Authentication` |
-| Story | `US-XXX Short outcome` | `US-010 Create an Order` |
-| Task | `TSK-XXXX Implementation step` | `TSK-0101 Write migration for orders table` |
+| Epic | `EPIC-XX Name` | `EPIC-01 Billing` |
+| Story | `US-XXX Outcome-focused title` | `US-010 Create an Order` |
+| Task (optional) | `TSK-XXXX Step` | `TSK-0101 Add validation errors` |
 
-## Labels
+## Labels (optional)
 
 - Phase: `mvp`, `phase2`, `future`
-- Layer: `backend`, `frontend`, `mobile`, `infra`, `qa`
-- Concern: project-specific tags like `auth`, `analytics`, `realtime`
+- Layer: `backend`, `frontend`, `infra`, `qa`
+- Concern: project-specific (`auth`, `analytics`, `realtime`, etc.)
 
 ## Story template (copy for new stories)
 
 ~~~markdown
-## US-XXX Story title (short, outcome-focused)
+## US-XXX Story title (outcome-focused)
 
 **Story Meta**
 ```yaml
 id: US-XXX
 status: backlog
 priority: medium
-depends_on: []
 owner: unassigned
+depends_on: []
+module: "[module-name]"           # from docs/ddd.md (Domain Module)
+aggregate: "[AggregateName]"      # from docs/ddd.md (if applicable)
+reqs: ["FR-1", "NFR-2"]           # from docs/prd.md
+phase: mvp
+risk: low                         # low | medium | high (drives validation)
 ```
 
 **Persona:** Who benefits
@@ -89,134 +116,122 @@ owner: unassigned
 **Acceptance Criteria**
 - [ ] Specific observable behavior #1
 - [ ] Specific observable behavior #2
-- [ ] Error or edge case behavior
+- [ ] Error/edge case behavior
 
-**API Contract** (planning intent only)
-Endpoint: `METHOD /api/path`
-Request:
-- `field` (type, required/optional) — description
+**Contract intent (optional, but recommended)**
+- Primary UI surface: [...]
+- Primary API intent: `METHOD /api/resource` (if applicable)
+- Key request fields: [...]
+- Key response fields: [...]
+- Expected error cases: [...]
 
-Response:
-- `data.field` (type) — description
+**Analytics (if applicable)**
+- Event(s): [...]
 
-Errors:
-- 4XX `ERROR_CODE` — when this happens
+**Notes / Open questions**
+- [...]
 
-**Tasks**
-- [ ] `migrations/...` — migration changes
-- [ ] `internal/<module>/queries.sql` — SQL queries
-- [ ] `internal/<module>/service.go` — business logic
-- [ ] `internal/<module>/handler.go` — HTTP handler
-- [ ] `api.yaml` — contract updates
-- [ ] `web/src/features/<module>/...` — UI changes
-- [ ] Tests: handler + service + integration/E2E as needed
+**Engineering checklist (optional)**
+- [ ] Data changes needed? (yes/no)
+- [ ] Contract changes needed? (yes/no)
+- [ ] UI changes needed? (yes/no)
+- [ ] Tests needed? (unit/handler/integration/e2e)
 ~~~
 
 ---
 
-# EPIC-00 Project Scaffolding & Foundation
+# EPIC-00 Foundation (required for any MVP)
 
-> Slice 0: Feature work cannot start until repo, DB workflow, and CI are in place.
+> Goal: a contributor can run, test, and ship safely.
 
-## US-000 Repository setup + local dev environment
+## US-000 Foundation — local dev environment works end-to-end
 
 **Story Meta**
 ```yaml
 id: US-000
 status: backlog
 priority: high
-depends_on: []
 owner: unassigned
+depends_on: []
+module: foundation
+aggregate: "-"
+reqs: []
+phase: mvp
+risk: medium
 ```
 
-**Persona:** Developer (human or LLM)
-**Outcome:** Any contributor can clone, install, and run the full stack locally in under 10 minutes.
+**Persona:** Developer (human or agent)
+**Outcome:** Any contributor can run the full stack locally with predictable commands.
 
 **Acceptance Criteria**
+- [ ] Local infra starts cleanly (DB + cache + any required services)
+- [ ] The API server starts locally without manual surgery
+- [ ] The web app starts locally and can call the API
+- [ ] A health check exists and returns “ok”
+- [ ] A new contributor can follow README steps successfully
 
-- [ ] `make dev-infra` starts Postgres, Redis, and object storage via Docker Compose
-- [ ] `make migrate` applies all migrations successfully
-- [ ] `make dev` starts the Go API and frontend dev server
-- [ ] `make lint`, `make test`, and `make validate` all pass
+**Contract intent (optional)**
+- Health endpoint exists (e.g., `GET /api/health`) returning an “ok” payload
+
+**Engineering checklist (optional)**
+- [ ] Standard make targets exist for local run + lint + test + validate
 - [ ] `.env.example` documents required environment variables
-- [ ] `curl http://localhost:3000/api/health` returns `{"status":"ok"}`
 
-**Tasks**
-
-- [ ] Initialize repo via `$project-scaffold`
-- [ ] `go.mod` initialized with core dependencies
-- [ ] `web/` initialized with React + Vite + TypeScript + Tailwind
-- [ ] `infra/docker-compose.yml` for Postgres/Redis/MinIO
-- [ ] `Makefile` standard commands
-- [ ] `.env.example` documented
-- [ ] `sqlc.yaml` configured
-- [ ] `.air.toml` configured
-- [ ] `api.yaml` includes `/health`
-- [ ] `pkg/httputil/` response helpers
-
-## US-001 Database schema + initial migration
+## US-001 Foundation — database workflow + schema baseline
 
 **Story Meta**
 ```yaml
 id: US-001
 status: backlog
 priority: high
-depends_on: [US-000]
 owner: unassigned
+depends_on: [US-000]
+module: foundation
+aggregate: "-"
+reqs: []
+phase: mvp
+risk: high
 ```
 
 **Persona:** Developer
-**Outcome:** Core tables exist and migration workflow is proven.
+**Outcome:** DB changes are repeatable and safe (migrations, schema snapshot, typed queries).
 
 **Acceptance Criteria**
+- [ ] A fresh DB can be created and migrated from zero reliably
+- [ ] There is an initial schema baseline for the MVP
+- [ ] Rollback strategy exists (at least for development)
+- [ ] Seed data (if needed) is deterministic
 
-- [ ] MVP tables created per data model
-- [ ] `make migrate` applies on fresh DB
-- [ ] `make schema-dump` produces accurate `schema.sql`
-- [ ] `make generate-sqlc` generates typed Go code
-- [ ] Seed script creates deterministic baseline data
-
-**Tasks**
-
-- [ ] `migrations/000001_initial.up.sql` create MVP tables + indexes
-- [ ] `migrations/000001_initial.down.sql` reversible rollback
-- [ ] `internal/<module>/queries.sql` initial CRUD queries
-- [ ] `cmd/seed/main.go` deterministic seed script
-- [ ] Verify fresh apply + rollback path
-
-## US-002 CI pipeline
+## US-002 Foundation — CI pipeline gates main
 
 **Story Meta**
 ```yaml
 id: US-002
 status: backlog
 priority: medium
-depends_on: [US-000]
 owner: unassigned
+depends_on: [US-000]
+module: foundation
+aggregate: "-"
+reqs: ["NFR-3"]
+phase: mvp
+risk: medium
 ```
 
 **Persona:** Developer
-**Outcome:** PRs are gated by lint, validate, tests, and build.
+**Outcome:** PRs are gated by automated checks before merge.
 
 **Acceptance Criteria**
-
-- [ ] CI runs on every PR to `main`
-- [ ] Pipeline: lint -> validate -> test -> build
-- [ ] Postgres service available for integration tests
-- [ ] Branch protection requires CI pass + approval
-
-**Tasks**
-
-- [ ] `.github/workflows/ci.yml` full pipeline
-- [ ] Postgres service in CI
-- [ ] `make validate` in CI
-- [ ] Branch protection rules documented/enforced
+- [ ] CI runs on every PR to main
+- [ ] Lint + tests + validation run in CI
+- [ ] Integration tests can run with required services
+- [ ] Merge is blocked when CI fails
 
 ---
 
-# EPIC-01 [Module Name] (MVP)
+# EPIC-01 [Domain Module Name] (MVP)
 
-> Why: [One sentence explaining why this module exists.]
+> Why: [one sentence describing why this module exists.]
 
 ## US-0XX [Story title]
 
@@ -225,37 +240,36 @@ owner: unassigned
 id: US-0XX
 status: backlog
 priority: medium
-depends_on: []
 owner: unassigned
+depends_on: []
+module: "[module-name]"
+aggregate: "[AggregateName]"
+reqs: ["FR-1"]
+phase: mvp
+risk: low
 ```
 
 **Persona:** [Role]
 **Outcome:** [What becomes possible]
 
 **Acceptance Criteria**
-
 - [ ] [Specific testable behavior]
 - [ ] [Error case]
 - [ ] [Access/control case]
 
-**API Contract**
+**Contract intent**
+- Primary UI surface: [...]
+- Primary API intent: [...]
+- Expected error cases: [...]
 
-Endpoint: `METHOD /api/path`
-Request:
-- `field` (type, required/optional) — description
+**Analytics**
+- Event(s): [...]
 
-Response:
-- `data.field` (type) — description
+**Notes / Open questions**
+- [...]
 
-Errors:
-- `4XX ERROR_CODE` — when this happens
-
-**Tasks**
-
-- [ ] `migrations/` migration if needed
-- [ ] `internal/<module>/queries.sql` SQL queries
-- [ ] `internal/<module>/service.go` business logic
-- [ ] `internal/<module>/handler.go` HTTP handler
-- [ ] `api.yaml` contract updates
-- [ ] `web/src/features/<module>/` UI updates
-- [ ] Tests: handler + service + integration/E2E as needed
+**Engineering checklist (optional)**
+- [ ] Data changes needed? (yes/no)
+- [ ] Contract changes needed? (yes/no)
+- [ ] UI changes needed? (yes/no)
+- [ ] Tests needed? (unit/handler/integration/e2e)

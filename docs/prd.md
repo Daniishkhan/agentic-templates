@@ -1,155 +1,198 @@
 ---
-title: "[Project Name] — PRD (Product Requirements)"
-status: "Draft | In Review | Approved"
-owner: "[PM Name]"
+id: DOC-PRD
+type: prd
+schema_version: 1
+project_name: "[Project Name]"
+status: draft # draft | in_review | approved
+owner: "[PM/Founder]"
 last_updated: "YYYY-MM-DD"
-source: "docs/onepager.md"
-next_step: "Once approved, translate into docs/epic.md"
+source_onepager: "docs/onepager.md"
+next_step: "After approval: complete docs/ddd.md, then translate into docs/epic.md"
 ---
 
 # PRD: [Project Name]
 
-> **Purpose:** The full product spec. Expands the one-pager into personas, journeys, features, and success criteria. This is the "what and for whom" document — no technical implementation details.
->
-> **Once approved:** The tech lead translates this into `docs/epic.md` (stories with acceptance criteria and API contracts).
+> Purpose: the full product spec (“what and for whom”), not implementation.
+> This should be stable enough that engineering can translate it into stories.
 
 ## 1) Overview
 
-**What we're building:** [1–2 sentences]
-**Who it's for:** [Primary users]
-**The outcome:** [What changes for users/business]
+**What we’re building (1–2 sentences):**
+- [...]
+
+**Who it’s for:**
+- Primary users: [...]
+- Secondary users: [...]
+
+**Desired outcome:**
+- User outcome: [...]
+- Business outcome: [...]
 
 ### Goals
-1. [Goal 1]
-2. [Goal 2]
-3. [Goal 3]
+1. [...]
+2. [...]
+3. [...]
 
-### Non-goals (what we are not solving now)
-- [Non-goal 1]
-- [Non-goal 2]
+### Non-goals (explicitly not solving now)
+- [...]
+- [...]
 
 ### Success metrics
 
 | Metric | Definition | Target |
 |---|---|---:|
-| [Metric] | [How measured] | [Target] |
-| [Metric] | [How measured] | [Target] |
+| [...] | [...] | [...] |
+| [...] | [...] | [...] |
 
-## 2) Users & problems
+## 2) Glossary (top terms)
+
+> Keep this short here. The authoritative glossary lives in `docs/ddd.md` (Ubiquitous Language).
+| Term | Meaning in this product |
+|---|---|
+| [...] | [...] |
+| [...] | [...] |
+
+## 3) Users & problems
 
 ### Personas
 
-**Persona A:** [Name/role]
-- Goals: [What they need]
-- Pain points: [What's broken for them]
-- Environment: [Mobile-only, time pressure, compliance, etc.]
+**Persona A: [Role/name]**
+- Primary goal: [...]
+- Pain points: [...]
+- Environment constraints (mobile-only, time pressure, compliance): [...]
 
-**Persona B (optional):** [Name/role]
-- Goals: [What they need]
-- Pain points: [What's broken]
+**Persona B (optional): [Role/name]**
+- Primary goal: [...]
+- Pain points: [...]
 
 ### Key user needs (ranked)
-1. [Most important need]
-2. [Second need]
-3. [Third need]
+1. [...]
+2. [...]
+3. [...]
 
-## 3) User journeys
+## 4) User journeys
 
-### Journey A — Primary flow
-1. [Step 1 → result]
-2. [Step 2 → result]
-3. [Step 3 → result]
+### Journey J1 — Primary flow (happy path)
+1. [Step → user-visible result]
+2. [Step → user-visible result]
+3. [Step → user-visible result]
 
-**User outcome:** [What the user achieves]
-**Business outcome:** [What the business gains]
+**User outcome:** [...]
+**Business outcome:** [...]
 
-### Journey B — Common exception / edge case
-1. [Step 1]
-2. [Step 2]
+### Journey J2 — Common exception / edge case
+1. [...]
+2. [...]
 
-**Desired handling:** [How the system should respond]
+**Desired handling:** [...]
 
-## 4) Scope
-
-### Core features (MVP — must have)
-
-1. **[Feature name]**
-   - Description: [What it does]
-   - User value: [Why it matters]
-   - Success signal: [How we know it works]
-
-2. **[Feature name]**
-   - Description: [What it does]
-   - User value: [Why it matters]
-   - Success signal: [How we know it works]
-
-3. **[Feature name]**
-   - Description: [What it does]
-   - User value: [Why it matters]
-   - Success signal: [How we know it works]
-
-### Post-MVP (nice to have)
-- **[Feature]** — [Why valuable]
-- **[Feature]** — [Why valuable]
-
-### Out of scope
-- [Explicit no 1]
-- [Explicit no 2]
+### Journey J3 — Admin / setup (if relevant)
+1. [...]
+2. [...]
 
 ## 5) Requirements
 
-### Functional requirements
-- [Users can…]
-- [System will…]
-- [When X happens, Y occurs…]
+> Use stable IDs so we can trace PRD → stories in `docs/epic.md`.
 
-### Permissions & roles (if relevant)
-- Roles: [List]
-- What each role can/can't do: [Brief matrix]
+### Functional requirements (FR)
 
-### Content, UX, and accessibility
-- Accessibility: [WCAG level or standard]
-- Localization: [Requirements]
+| ID | Requirement (observable behavior) | Priority | Notes |
+|---|---|---|---|
+| FR-1 | [Users can …] | must | |
+| FR-2 | [System will …] | must | |
+| FR-3 | [When X happens, Y occurs …] | should | |
+| FR-4 | [...] | could | |
 
-## 6) Analytics
+### Roles & permissions (if relevant)
 
-**Events to track:**
-- [Feature used]
-- [Task completed]
-- [Failure/abandonment]
+| Capability | Role A | Role B | Role C |
+|---|---:|---:|---:|
+| [Do thing] | ✅/❌ | ✅/❌ | ✅/❌ |
+| [Do admin thing] | ✅/❌ | ✅/❌ | ✅/❌ |
 
-**Key funnels:**
-- [Funnel description]
+### Non-functional requirements (NFR)
 
-## 7) Rollout
+| ID | Requirement | Target / constraint | Notes |
+|---|---|---|---|
+| NFR-1 | Security: [authn/authz expectation] | [e.g., role-based] | |
+| NFR-2 | Privacy: [data handling expectation] | [e.g., PII minimized] | |
+| NFR-3 | Reliability: [availability] | [e.g., best effort MVP] | |
+| NFR-4 | Performance: [latency] | [e.g., p95 < 300ms for reads] | |
+| NFR-5 | Accessibility: [standard] | [e.g., WCAG 2.1 AA] | |
 
-**Target launch group:** [Pilot users, region, team]
-**Training needed:** [Documentation, walkthroughs]
-**Support plan:** [Who handles issues, escalation path]
+## 6) UX, content, and accessibility
 
-## 8) Risks, assumptions, dependencies
+- Information architecture: [...]
+- Key screens/pages: [...]
+- Empty states required: [...]
+- Error states required: [...]
+- Accessibility requirements: [...]
+
+## 7) Data & integrations (conceptual)
+
+> This is not a DB schema. It’s what data exists and where it comes from.
+
+### Data we create/store
+- [Record type] — purpose, retention expectation
+- [Record type] — purpose, retention expectation
+
+### Data we read from other systems (if any)
+- [System] — [data], [sync mode], [owner]
+
+### Data lifecycle requirements
+- Export: [yes/no, format]
+- Deletion: [who can delete, what happens]
+- Audit/history: [what actions must be auditable]
+
+## 8) Analytics & measurement
+
+### Event naming convention
+- Use `snake_case` event names and property keys.
+- Each event includes: `actor_id` (if known), `source` (screen), `timestamp`.
+
+### Event dictionary
+
+| Event | When it fires | Properties | Success signal |
+|---|---|---|---|
+| `[...]` | [...] | [...] | [...] |
+| `[...]` | [...] | [...] | [...] |
+
+### Key funnels
+- Funnel F1: [...]
+- Funnel F2: [...]
+
+## 9) Rollout, training, and support
+
+- Target launch group: [...]
+- Rollout plan: [...]
+- Training required: [...]
+- Support & escalation: [...]
+
+## 10) Risks, assumptions, dependencies
 
 ### Risks
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| [Risk] | [Impact] | [Mitigation] |
+| [...] | [...] | [...] |
+| [...] | [...] | [...] |
 
 ### Assumptions
-- [Assumption 1]
-- [Assumption 2]
+- [...]
+- [...]
 
 ### Dependencies
-- [Teams, vendors, approvals, data sources]
+- [...]
+- [...]
 
-## 9) Open questions
-- [Question 1]
-- [Question 2]
+## 11) Open questions
 
-## 10) Definition of Done (product-level)
+- [Question]
+- [Question]
 
-- [ ] Core features shipped and usable by target users
-- [ ] Success metrics instrumented (or measurement plan exists)
-- [ ] Key user journey works end-to-end, including primary exception
-- [ ] Rollout/training/support plan ready
+## 12) Definition of Done (product-level)
+
+- [ ] MVP journeys work end-to-end (J1 + key edge case)
+- [ ] Must-have FRs delivered (FR “must” rows)
+- [ ] Instrumentation plan implemented or explicitly deferred with owner/date
 - [ ] Stakeholders sign off on MVP scope

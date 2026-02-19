@@ -17,8 +17,10 @@ Contract:   OpenAPI 3.1 (api.yaml) -> generated TypeScript types
 ```text
 1) docs/onepager.md  (idea + MVP scope)
 2) docs/prd.md       (full product requirements)
-3) docs/epic.md      (single backlog source: epics, stories, tasks, dependencies, status)
-4) progress.md       (execution log maintained while implementing)
+3) docs/ddd.md       (domain design: bounded contexts, aggregates, invariants)
+4) docs/epic.md      (single backlog source: epics, stories, tasks, dependencies, status)
+5) progress.md       (execution log maintained while implementing)
+
 ```
 
 `docs/epic.md` is the big bucket. Fill all epics/stories/tasks there.
@@ -123,6 +125,7 @@ Each skill should include:
 | `AGENTS.md` | Tech lead | Always-loaded operating rules |
 | `docs/onepager.md` | PM/founder | Problem framing |
 | `docs/prd.md` | PM/founder | Product requirements |
+| `docs/ddd.md` | PM + tech lead | Domain model and design constraints |
 | `docs/epic.md` | PM + tech lead | Backlog and execution state |
 | `logs/learning.db` | AI runtime | Incident directive ledger (queryable) |
 | `memory.md` | AI + tech lead | Durable lessons from major incidents |
@@ -140,5 +143,5 @@ Each skill should include:
 2) docs/epic.md
 3) logs/learning.db + memory.md
 4) progress.md
-5) docs/prd.md + docs/onepager.md
+5) docs/prd.md + docs/onepager.md + docs/ddd.md
 ```
